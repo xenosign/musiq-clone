@@ -43,18 +43,6 @@ export default function RoomPage() {
     return () => clearTimeout(timer);
   }, [question]);
 
-  const fetchVideoId = useCallback(async (artist: string, title: string) => {
-    try {
-      const res = await fetch(
-        `/api/youtube?q=${encodeURIComponent(`${artist} ${title} official audio`)}`,
-      );
-      const data = await res.json();
-      setVideoId(data.videoId ?? null);
-    } catch {
-      setVideoId(null);
-    }
-  }, []);
-
   const handleMessage = useCallback(
     (msg: ServerMessage) => {
       if (msg.type === 'room_joined') {
@@ -71,7 +59,7 @@ export default function RoomPage() {
       } else if (msg.type === 'next_question') {
         setQuestion(msg.payload);
         setLastCorrect(null);
-        fetchVideoId(msg.payload.artist, msg.payload.title);
+        setVideoId(msg.payload.videoId);
       } else if (msg.type === 'answer_correct') {
         setLastCorrect({
           playerName: msg.payload.playerName,
@@ -89,7 +77,7 @@ export default function RoomPage() {
         router.push('/');
       }
     },
-    [router, fetchVideoId],
+    [router],
   );
 
   const handleOpen = useCallback(() => {

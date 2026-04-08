@@ -56,6 +56,7 @@ export interface QuizQuestion {
   title: string;
   year: number;
   decade: Decade;
+  videoId: string | null;
 }
 
 export type ServerMessage =

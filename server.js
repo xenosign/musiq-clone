@@ -72,6 +72,7 @@ function sendQuestion(roomId) {
       title: song.title,
       year: song.year,
       decade: song.decade,
+      videoId: song.youtubeId ?? null,
     },
   });
 }
