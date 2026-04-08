@@ -9,8 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const TOTAL_QUESTIONS = 10;
-const QUESTION_TIMEOUT_MS = 30000;
+const DEFAULT_TOTAL_QUESTIONS = 10;
 
 // In-memory store
 const rooms = new Map(); // roomId -> Room
@@ -75,19 +74,6 @@ function sendQuestion(roomId) {
       decade: song.decade,
     },
   });
-
-  game.timer = setTimeout(() => {
-    sendAll(roomId, {
-      type: 'chat_message',
-      payload: {
-        sender: 'System',
-        message: `⏰ 시간 초과! 정답은 "${song.title}" 이었습니다.`,
-        timestamp: Date.now(),
-      },
-    });
-    game.currentIndex++;
-    setTimeout(() => sendQuestion(roomId), 2000);
-  }, QUESTION_TIMEOUT_MS);
 }
 
 function finishGame(roomId) {
@@ -138,12 +124,13 @@ app.prepare().then(() => {
         }
 
         case 'create_room': {
-          const { maxPlayers, hostName, decades } = msg.payload;
+          const { maxPlayers, hostName, decades, totalQuestions } = msg.payload;
           const roomId = randomUUID().slice(0, 8).toUpperCase();
           const room = {
             id: roomId,
             hostName,
             maxPlayers: Number(maxPlayers),
+            totalQuestions: Number(totalQuestions) || DEFAULT_TOTAL_QUESTIONS,
             players: [],
             scores: {},
             decades: Array.isArray(decades) && decades.length > 0 ? decades : ['2000'],
@@ -201,7 +188,7 @@ app.prepare().then(() => {
 
           // Pick songs
           const allSongs = shuffle(getSongsForDecades(room.decades ?? ['2000']));
-          const picked = allSongs.slice(0, Math.min(TOTAL_QUESTIONS, allSongs.length));
+          const picked = allSongs.slice(0, Math.min(room.totalQuestions ?? DEFAULT_TOTAL_QUESTIONS, allSongs.length));
 
           room.status = 'playing';
           room.game = { songs: picked, currentIndex: 0, answered: false, answeredBy: null, timer: null };
@@ -224,7 +211,8 @@ app.prepare().then(() => {
           // Check for correct answer
           if (room.status === 'playing' && room.game && !room.game.answered) {
             const song = room.game.songs[room.game.currentIndex];
-            if (song && normalize(message) === normalize(song.title)) {
+            const answers = Array.isArray(song?.answer) ? song.answer : [song?.title];
+            if (song && answers.some((a) => normalize(message) === normalize(a))) {
               room.game.answered = true;
               room.game.answeredBy = playerName;
               if (room.game.timer) clearTimeout(room.game.timer);
@@ -253,6 +241,27 @@ app.prepare().then(() => {
           const payload = { type: 'chat_message', payload: chatMsg };
           send(ws, payload);
           broadcastToRoom(roomId, payload, ws);
+          break;
+        }
+
+        case 'skip_question': {
+          const { roomId, playerName } = clientInfo;
+          if (!roomId) break;
+          const room = rooms.get(roomId);
+          if (!room || room.hostName !== playerName || room.status !== 'playing') break;
+          if (!room.game || room.game.answered) break;
+
+          room.game.answered = true;
+          if (room.game.timer) clearTimeout(room.game.timer);
+
+          const song = room.game.songs[room.game.currentIndex];
+          sendAll(roomId, {
+            type: 'chat_message',
+            payload: { sender: 'System', message: `⏭ 스킵! 정답은 "${song.title}" 이었습니다.`, timestamp: Date.now() },
+          });
+
+          room.game.currentIndex++;
+          setTimeout(() => sendQuestion(roomId), 2000);
           break;
         }
 

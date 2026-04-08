@@ -12,6 +12,7 @@ export default function Home() {
   const [view, setView] = useState<View>('home');
   const [playerName, setPlayerName] = useState('');
   const [maxPlayers, setMaxPlayers] = useState(4);
+  const [totalQuestions, setTotalQuestions] = useState(10);
   const [selectedDecades, setSelectedDecades] = useState<Decade[]>(['2000']);
   const [rooms, setRooms] = useState<RoomSummary[]>([]);
   const [error, setError] = useState('');
@@ -19,7 +20,7 @@ export default function Home() {
   const toggleDecade = (d: Decade) => {
     setSelectedDecades((prev) =>
       prev.includes(d)
-        ? prev.length === 1 ? prev : prev.filter((x) => x !== d) // 최소 1개 유지
+        ? prev.length === 1 ? prev : prev.filter((x) => x !== d)
         : [...prev, d]
     );
   };
@@ -29,7 +30,7 @@ export default function Home() {
       if (msg.type === 'room_list') {
         setRooms(msg.payload.rooms);
       } else if (msg.type === 'room_created') {
-        router.push(`/room/${msg.payload.roomId}?name=${encodeURIComponent(playerName)}`);
+        router.push(`/room/${msg.payload.roomId}?name=${encodeURIComponent(playerName.trim())}`);
       } else if (msg.type === 'error') {
         setError(msg.payload.message);
       }
@@ -42,7 +43,7 @@ export default function Home() {
   const handleCreate = () => {
     if (!playerName.trim()) return setError('닉네임을 입력해주세요.');
     setError('');
-    send({ type: 'create_room', payload: { maxPlayers, hostName: playerName.trim(), decades: selectedDecades } });
+    send({ type: 'create_room', payload: { maxPlayers, hostName: playerName.trim(), decades: selectedDecades, totalQuestions } });
   };
 
   const handleJoin = (roomId: string) => {
@@ -127,6 +128,22 @@ export default function Home() {
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
               <span>2명</span><span>8명</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-400 mb-1 block">문제 수: {totalQuestions}문제</label>
+            <input
+              type="range"
+              min={5}
+              max={30}
+              step={5}
+              value={totalQuestions}
+              onChange={(e) => setTotalQuestions(Number(e.target.value))}
+              className="w-full accent-purple-500"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>5문제</span><span>30문제</span>
             </div>
           </div>
 

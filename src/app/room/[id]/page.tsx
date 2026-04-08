@@ -3,10 +3,14 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useWebSocket } from '@/hooks/useWebSocket';
-import { ChatMessage, DECADE_LABELS, QuizQuestion, Room, ServerMessage } from '@/types';
+import {
+  ChatMessage,
+  DECADE_LABELS,
+  QuizQuestion,
+  Room,
+  ServerMessage,
+} from '@/types';
 import { YoutubePlayer } from '@/components/YoutubePlayer';
-
-const QUESTION_DURATION = 30; // seconds
 
 export default function RoomPage() {
   const params = useParams();
@@ -20,15 +24,30 @@ export default function RoomPage() {
   const [input, setInput] = useState('');
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
-  const [lastCorrect, setLastCorrect] = useState<{ playerName: string; songTitle: string } | null>(null);
-  const [gameFinished, setGameFinished] = useState<{ scores: Record<string, number>; winner: string } | null>(null);
-  // key to force CSS animation restart on each question
-  const [barKey, setBarKey] = useState(0);
+  const [lastCorrect, setLastCorrect] = useState<{
+    playerName: string;
+    songTitle: string;
+  } | null>(null);
+  const [gameFinished, setGameFinished] = useState<{
+    scores: Record<string, number>;
+    winner: string;
+  } | null>(null);
+  const [showArtist, setShowArtist] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // 새 문제마다 가수 힌트를 5초 후에 표시
+  useEffect(() => {
+    if (!question) return;
+    setShowArtist(false);
+    const timer = setTimeout(() => setShowArtist(true), 10000);
+    return () => clearTimeout(timer);
+  }, [question]);
 
   const fetchVideoId = useCallback(async (artist: string, title: string) => {
     try {
-      const res = await fetch(`/api/youtube?q=${encodeURIComponent(`${artist} ${title} official audio`)}`);
+      const res = await fetch(
+        `/api/youtube?q=${encodeURIComponent(`${artist} ${title} official audio`)}`,
+      );
       const data = await res.json();
       setVideoId(data.videoId ?? null);
     } catch {
@@ -36,38 +55,48 @@ export default function RoomPage() {
     }
   }, []);
 
-  const handleMessage = useCallback((msg: ServerMessage) => {
-    if (msg.type === 'room_joined') {
-      setRoom(msg.payload.room);
-    } else if (msg.type === 'room_updated') {
-      setRoom(msg.payload.room);
-    } else if (msg.type === 'chat_message') {
-      setMessages((prev) => [...prev, msg.payload]);
-    } else if (msg.type === 'game_started') {
-      setGameFinished(null);
-      setLastCorrect(null);
-      setQuestion(null);
-      setVideoId(null);
-    } else if (msg.type === 'next_question') {
-      setQuestion(msg.payload);
-      setLastCorrect(null);
-      setBarKey((k) => k + 1);
-      fetchVideoId(msg.payload.artist, msg.payload.title);
-    } else if (msg.type === 'answer_correct') {
-      setLastCorrect({ playerName: msg.payload.playerName, songTitle: msg.payload.songTitle });
-      setRoom((prev) => prev ? { ...prev, scores: msg.payload.scores } : prev);
-    } else if (msg.type === 'game_finished') {
-      setGameFinished(msg.payload);
-      setQuestion(null);
-      setVideoId(null);
-    } else if (msg.type === 'error') {
-      alert(msg.payload.message);
-      router.push('/');
-    }
-  }, [router, fetchVideoId, question]);
+  const handleMessage = useCallback(
+    (msg: ServerMessage) => {
+      if (msg.type === 'room_joined') {
+        setRoom(msg.payload.room);
+      } else if (msg.type === 'room_updated') {
+        setRoom(msg.payload.room);
+      } else if (msg.type === 'chat_message') {
+        setMessages((prev) => [...prev, msg.payload]);
+      } else if (msg.type === 'game_started') {
+        setGameFinished(null);
+        setLastCorrect(null);
+        setQuestion(null);
+        setVideoId(null);
+      } else if (msg.type === 'next_question') {
+        setQuestion(msg.payload);
+        setLastCorrect(null);
+        fetchVideoId(msg.payload.artist, msg.payload.title);
+      } else if (msg.type === 'answer_correct') {
+        setLastCorrect({
+          playerName: msg.payload.playerName,
+          songTitle: msg.payload.songTitle,
+        });
+        setRoom((prev) =>
+          prev ? { ...prev, scores: msg.payload.scores } : prev,
+        );
+      } else if (msg.type === 'game_finished') {
+        setGameFinished(msg.payload);
+        setQuestion(null);
+        setVideoId(null);
+      } else if (msg.type === 'error') {
+        alert(msg.payload.message);
+        router.push('/');
+      }
+    },
+    [router, fetchVideoId],
+  );
 
   const handleOpen = useCallback(() => {
-    if (!playerName) { router.push('/'); return; }
+    if (!playerName) {
+      router.push('/');
+      return;
+    }
     sendRef.current({ type: 'join_room', payload: { roomId, playerName } });
   }, [roomId, playerName, router]);
 
@@ -92,11 +121,16 @@ export default function RoomPage() {
   };
 
   const formatTime = (ts: number) =>
-    new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    new Date(ts).toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
   const isHost = room?.hostName === playerName;
   const scores = room
-    ? [...room.players].sort((a, b) => ((room.scores?.[b] ?? 0) - (room.scores?.[a] ?? 0)))
+    ? [...room.players].sort(
+        (a, b) => (room.scores?.[b] ?? 0) - (room.scores?.[a] ?? 0),
+      )
     : [];
 
   return (
@@ -112,33 +146,55 @@ export default function RoomPage() {
           )}
           <span className="text-xs text-gray-500">#{roomId}</span>
         </div>
-        <button onClick={handleLeave} className="text-sm text-gray-400 hover:text-red-400 transition">나가기</button>
+        <button
+          onClick={handleLeave}
+          className="text-sm text-gray-400 hover:text-red-400 transition"
+        >
+          나가기
+        </button>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         <div className="flex flex-col flex-1 overflow-hidden">
-
           {/* Quiz Panel */}
           <div className="bg-gray-900 border-b border-gray-800 shrink-0">
-
             {/* 대기 중 */}
             {room?.status === 'waiting' && (
               <div className="flex flex-col items-center gap-3 py-6 px-4">
                 <div className="text-4xl">🎵</div>
-                <p className="text-gray-400 text-sm">{room.players.length}/{room.maxPlayers}명 참가 중</p>
-                <p className="text-gray-500 text-xs">
-                  선택 년대: <span className="text-purple-400">{(room.decades ?? []).map((d) => DECADE_LABELS[d]).join(', ')}</span>
+                <p className="text-gray-400 text-sm">
+                  {room.players.length}/{room.maxPlayers}명 참가 중
                 </p>
+                <p className="text-gray-500 text-xs">
+                  선택 년대:{' '}
+                  <span className="text-purple-400">
+                    {(room.decades ?? [])
+                      .map((d) => DECADE_LABELS[d])
+                      .join(', ')}
+                  </span>
+                </p>
+                {room.totalQuestions && (
+                  <p className="text-gray-500 text-xs">
+                    문제 수:{' '}
+                    <span className="text-purple-400">
+                      {room.totalQuestions}문제
+                    </span>
+                  </p>
+                )}
                 {isHost ? (
                   <button
                     onClick={() => send({ type: 'start_game' })}
                     disabled={room.players.length < 2}
                     className="mt-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition px-8 py-2 rounded-xl font-semibold text-sm"
                   >
-                    {room.players.length < 2 ? '게임 시작 (2명 이상 필요)' : '게임 시작'}
+                    {room.players.length < 2
+                      ? '게임 시작 (2명 이상 필요)'
+                      : '게임 시작'}
                   </button>
                 ) : (
-                  <p className="text-xs text-gray-500">호스트가 게임을 시작하면 시작됩니다</p>
+                  <p className="text-xs text-gray-500">
+                    호스트가 게임을 시작하면 시작됩니다
+                  </p>
                 )}
               </div>
             )}
@@ -146,73 +202,94 @@ export default function RoomPage() {
             {/* 게임 진행 중 */}
             {room?.status === 'playing' && question && (
               <div className="p-4 flex flex-col gap-3">
-                {/* 진행 바 — CSS animation으로 실시간 감소 */}
-                <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
-                  <span>문제 {question.questionNumber} / {question.totalQuestions}</span>
-                  <span className="text-gray-500">{DECADE_LABELS[question.decade]}</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
-                  <div
-                    key={barKey}
-                    className="h-2 rounded-full bg-purple-500"
-                    style={{
-                      animation: `countdown ${QUESTION_DURATION}s linear forwards`,
-                      animationPlayState: lastCorrect ? 'paused' : 'running',
-                    }}
-                  />
+                <div className="flex items-center justify-between text-xs text-gray-400">
+                  <span>
+                    문제 {question.questionNumber} / {question.totalQuestions}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500">
+                      {DECADE_LABELS[question.decade]}
+                    </span>
+                    {isHost && !lastCorrect && (
+                      <button
+                        onClick={() => send({ type: 'skip_question' })}
+                        className="bg-gray-700 hover:bg-gray-600 transition px-3 py-1 rounded-lg text-xs font-medium"
+                      >
+                        ⏭ 스킵
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {!lastCorrect && (
-                  <div className="flex gap-4">
-                    {/* 힌트 */}
-                    <div className="bg-gray-800 rounded-xl p-4 flex flex-col items-center gap-2 flex-1">
-                      <p className="text-xs text-gray-400 uppercase tracking-widest">이 노래의 제목은?</p>
-                      <div className="flex gap-6 mt-1">
-                        <div className="text-center">
-                          <p className="text-gray-500 text-xs mb-0.5">가수</p>
-                          <p className="font-bold text-white text-lg">{question.artist}</p>
+                <div className="flex gap-4">
+                  {/* 힌트 / 정답 메시지 */}
+                  <div className="flex-1">
+                    {!lastCorrect && (
+                      <div className="bg-gray-800 rounded-xl p-4 flex flex-col items-center gap-2">
+                        <p className="text-xs text-gray-400 uppercase tracking-widest">
+                          이 노래의 제목은?
+                        </p>
+                        <div className="flex gap-6 mt-1">
+                          <div className="text-center">
+                            <p className="text-gray-500 text-xs mb-0.5">가수</p>
+                            {showArtist ? (
+                              <p className="font-bold text-white text-lg">
+                                {question.artist}
+                              </p>
+                            ) : (
+                              <p className="font-bold text-gray-600 text-lg">
+                                5초 후 공개...
+                              </p>
+                            )}
+                          </div>
+                          <div className="w-px bg-gray-700" />
+                          <div className="text-center">
+                            <p className="text-gray-500 text-xs mb-0.5">발매</p>
+                            <p className="font-bold text-white text-lg">
+                              {question.year}년
+                            </p>
+                          </div>
                         </div>
-                        <div className="w-px bg-gray-700" />
-                        <div className="text-center">
-                          <p className="text-gray-500 text-xs mb-0.5">발매</p>
-                          <p className="font-bold text-white text-lg">{question.year}년</p>
-                        </div>
-                      </div>
-                      {/* 테스트용 정답 표시 */}
-                      <p className="text-xs text-yellow-500 mt-2">[테스트] 정답: {question.title}</p>
-                    </div>
-                    {/* YouTube 플레이어 */}
-                    {videoId && (
-                      <div className="w-56 shrink-0">
-                        <YoutubePlayer videoId={videoId} />
+                        {/* 테스트용 정답 표시 */}
+                        {/* <p className="text-xs text-yellow-500 mt-2">[테스트] 정답: {question.title}</p> */}
                       </div>
                     )}
-                    {!videoId && (
-                      <div className="w-56 shrink-0 bg-gray-800 rounded-xl flex items-center justify-center">
-                        <div className="text-center text-gray-500">
-                          <div className="text-2xl mb-1 animate-pulse">🎵</div>
-                          <p className="text-xs">로딩 중...</p>
-                        </div>
+                    {lastCorrect && (
+                      <div className="bg-green-900/30 border border-green-700 rounded-xl p-4 flex flex-col items-center gap-1">
+                        <div className="text-2xl">🎉</div>
+                        <p className="text-green-400 font-bold">
+                          {lastCorrect.playerName}님이 맞추셨습니다!
+                        </p>
+                        <p className="text-gray-300 text-sm">
+                          정답:{' '}
+                          <span className="text-white font-semibold">
+                            "{lastCorrect.songTitle}"
+                          </span>
+                        </p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          다음 문제 준비 중...
+                        </p>
                       </div>
                     )}
                   </div>
-                )}
-
-                {lastCorrect && (
-                  <div className="flex gap-4">
-                    <div className="flex-1 bg-green-900/30 border border-green-700 rounded-xl p-4 flex flex-col items-center gap-1">
-                      <div className="text-2xl">🎉</div>
-                      <p className="text-green-400 font-bold">{lastCorrect.playerName}님이 맞추셨습니다!</p>
-                      <p className="text-gray-300 text-sm">정답: <span className="text-white font-semibold">"{lastCorrect.songTitle}"</span></p>
-                      <p className="text-gray-500 text-xs mt-1">다음 문제 준비 중...</p>
-                    </div>
-                    {videoId && (
-                      <div className="w-56 shrink-0">
+                  {/* YouTube 플레이어 — 방장만 재생 */}
+                  {isHost && (
+                    <div className="w-56 shrink-0">
+                      {videoId ? (
                         <YoutubePlayer videoId={videoId} />
-                      </div>
-                    )}
-                  </div>
-                )}
+                      ) : (
+                        <div className="h-full bg-gray-800 rounded-xl flex items-center justify-center">
+                          <div className="text-center text-gray-500">
+                            <div className="text-2xl mb-1 animate-pulse">
+                              🎵
+                            </div>
+                            <p className="text-xs">로딩 중...</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -221,15 +298,33 @@ export default function RoomPage() {
               <div className="p-4 flex flex-col items-center gap-3">
                 <div className="text-3xl">🏆</div>
                 <p className="text-yellow-400 font-bold text-lg">게임 종료!</p>
-                <p className="text-gray-300 text-sm">우승: <span className="text-white font-bold">{gameFinished.winner}</span></p>
+                <p className="text-gray-300 text-sm">
+                  우승:{' '}
+                  <span className="text-white font-bold">
+                    {gameFinished.winner}
+                  </span>
+                </p>
                 <div className="flex gap-2 flex-wrap justify-center mt-1">
                   {Object.entries(gameFinished.scores)
                     .sort(([, a], [, b]) => b - a)
                     .map(([name, score], i) => (
-                      <div key={name} className="bg-gray-800 rounded-lg px-3 py-1.5 text-sm flex items-center gap-2">
+                      <div
+                        key={name}
+                        className="bg-gray-800 rounded-lg px-3 py-1.5 text-sm flex items-center gap-2"
+                      >
                         <span className="text-gray-400">{i + 1}.</span>
-                        <span className={name === playerName ? 'text-purple-400 font-bold' : ''}>{name}</span>
-                        <span className="text-yellow-400 font-bold">{score}점</span>
+                        <span
+                          className={
+                            name === playerName
+                              ? 'text-purple-400 font-bold'
+                              : ''
+                          }
+                        >
+                          {name}
+                        </span>
+                        <span className="text-yellow-400 font-bold">
+                          {score}점
+                        </span>
                       </div>
                     ))}
                 </div>
@@ -250,12 +345,20 @@ export default function RoomPage() {
             <div className="flex gap-2 flex-wrap items-center">
               <span className="text-xs text-gray-500">점수:</span>
               {scores.map((name, i) => (
-                <div key={name} className="flex items-center gap-1 bg-gray-800 rounded-lg px-2.5 py-1">
+                <div
+                  key={name}
+                  className="flex items-center gap-1 bg-gray-800 rounded-lg px-2.5 py-1"
+                >
                   <span className="text-xs text-gray-500">{i + 1}.</span>
-                  <span className={`text-xs ${name === playerName ? 'text-purple-400 font-semibold' : ''}`}>
-                    {name}{name === room?.hostName && ' 👑'}
+                  <span
+                    className={`text-xs ${name === playerName ? 'text-purple-400 font-semibold' : ''}`}
+                  >
+                    {name}
+                    {name === room?.hostName && ' 👑'}
                   </span>
-                  <span className="text-xs text-yellow-400 ml-1">{room?.scores?.[name] ?? 0}점</span>
+                  <span className="text-xs text-yellow-400 ml-1">
+                    {room?.scores?.[name] ?? 0}점
+                  </span>
                 </div>
               ))}
             </div>
@@ -267,16 +370,31 @@ export default function RoomPage() {
               const isSystem = msg.sender === 'System';
               const isMe = msg.sender === playerName;
               return (
-                <div key={i} className={`flex ${isSystem ? 'justify-center' : isMe ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  key={i}
+                  className={`flex ${isSystem ? 'justify-center' : isMe ? 'justify-end' : 'justify-start'}`}
+                >
                   {isSystem ? (
-                    <span className="text-xs text-gray-500 bg-gray-800 px-3 py-1 rounded-full">{msg.message}</span>
+                    <span className="text-xs text-gray-500 bg-gray-800 px-3 py-1 rounded-full">
+                      {msg.message}
+                    </span>
                   ) : (
-                    <div className={`max-w-xs flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                      {!isMe && <span className="text-xs text-gray-400 mb-1 ml-1">{msg.sender}</span>}
-                      <div className={`px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-purple-600 rounded-br-sm' : 'bg-gray-700 rounded-bl-sm'}`}>
+                    <div
+                      className={`max-w-xs flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
+                    >
+                      {!isMe && (
+                        <span className="text-xs text-gray-400 mb-1 ml-1">
+                          {msg.sender}
+                        </span>
+                      )}
+                      <div
+                        className={`px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-purple-600 rounded-br-sm' : 'bg-gray-700 rounded-bl-sm'}`}
+                      >
                         {msg.message}
                       </div>
-                      <span className="text-xs text-gray-600 mt-1 mx-1">{formatTime(msg.timestamp)}</span>
+                      <span className="text-xs text-gray-600 mt-1 mx-1">
+                        {formatTime(msg.timestamp)}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -292,10 +410,17 @@ export default function RoomPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendChat()}
-              placeholder={room?.status === 'playing' ? '정답 또는 채팅 입력...' : '채팅 입력...'}
+              placeholder={
+                room?.status === 'playing'
+                  ? '정답 또는 채팅 입력...'
+                  : '채팅 입력...'
+              }
               className="flex-1 bg-gray-800 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <button onClick={sendChat} className="bg-purple-600 hover:bg-purple-700 transition px-4 py-2 rounded-xl text-sm font-semibold">
+            <button
+              onClick={sendChat}
+              className="bg-purple-600 hover:bg-purple-700 transition px-4 py-2 rounded-xl text-sm font-semibold"
+            >
               전송
             </button>
           </div>
@@ -310,8 +435,13 @@ export default function RoomPage() {
             {(room?.players ?? []).map((name) => (
               <li key={name} className="flex items-center gap-2 text-sm">
                 <span className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
-                <span className={name === playerName ? 'text-purple-400 font-semibold' : ''}>
-                  {name}{name === room?.hostName && ' 👑'}
+                <span
+                  className={
+                    name === playerName ? 'text-purple-400 font-semibold' : ''
+                  }
+                >
+                  {name}
+                  {name === room?.hostName && ' 👑'}
                 </span>
               </li>
             ))}

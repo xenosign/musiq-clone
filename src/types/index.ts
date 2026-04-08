@@ -1,12 +1,14 @@
-export type Decade = '1980' | '1990' | '2000' | '2010' | '2021' | '2022' | '2023' | '2024' | '2025';
+export type Decade = '1980' | '1990' | '2000' | '2005' | '2010' | '2015' | '2021' | '2022' | '2023' | '2024' | '2025';
 
-export const DECADES: Decade[] = ['1980', '1990', '2000', '2010', '2021', '2022', '2023', '2024', '2025'];
+export const DECADES: Decade[] = ['1980', '1990', '2000', '2005', '2010', '2015', '2021', '2022', '2023', '2024', '2025'];
 
 export const DECADE_LABELS: Record<Decade, string> = {
   '1980': '1980년대',
   '1990': '1990년대',
-  '2000': '2000년대',
-  '2010': '2010년대',
+  '2000': '2000~2004',
+  '2005': '2005~2009',
+  '2010': '2010~2014',
+  '2015': '2015~2019',
   '2021': '2021년',
   '2022': '2022년',
   '2023': '2023년',
@@ -23,6 +25,7 @@ export interface Room {
   id: string;
   hostName: string;
   maxPlayers: number;
+  totalQuestions: number;
   players: string[];
   scores: Record<string, number>;
   decades: Decade[];
