@@ -87,7 +87,10 @@ function finishGame(roomId) {
   const sorted = Object.entries(room.scores).sort(([, a], [, b]) => b - a);
   const winner = sorted[0]?.[0] ?? '없음';
 
-  sendAll(roomId, { type: 'game_finished', payload: { scores: room.scores, winner } });
+  sendAll(roomId, {
+    type: 'game_finished',
+    payload: { scores: room.scores, winner },
+  });
   sendAll(roomId, { type: 'room_updated', payload: { room } });
 }
 
@@ -113,7 +116,11 @@ app.prepare().then(() => {
 
     ws.on('message', (data) => {
       let msg;
-      try { msg = JSON.parse(data.toString()); } catch { return; }
+      try {
+        msg = JSON.parse(data.toString());
+      } catch {
+        return;
+      }
 
       const clientInfo = clients.get(ws);
 
@@ -133,7 +140,8 @@ app.prepare().then(() => {
             totalQuestions: Number(totalQuestions) || DEFAULT_TOTAL_QUESTIONS,
             players: [],
             scores: {},
-            decades: Array.isArray(decades) && decades.length > 0 ? decades : ['2000'],
+            decades:
+              Array.isArray(decades) && decades.length > 0 ? decades : ['2000'],
             status: 'waiting',
             createdAt: Date.now(),
             messages: [],
@@ -148,17 +156,32 @@ app.prepare().then(() => {
           const { roomId, playerName } = msg.payload;
           const room = rooms.get(roomId);
 
-          if (!room) { send(ws, { type: 'error', payload: { message: '존재하지 않는 방입니다.' } }); break; }
+          if (!room) {
+            send(ws, {
+              type: 'error',
+              payload: { message: '존재하지 않는 방입니다.' },
+            });
+            break;
+          }
           if (!room.scores) room.scores = {};
 
-          if (room.players.includes(playerName) && clientInfo.roomId !== roomId) {
+          if (
+            room.players.includes(playerName) &&
+            clientInfo.roomId !== roomId
+          ) {
             clientInfo.roomId = roomId;
             clientInfo.playerName = playerName;
             send(ws, { type: 'room_joined', payload: { roomId, room } });
             break;
           }
 
-          if (room.players.length >= room.maxPlayers) { send(ws, { type: 'error', payload: { message: '방이 가득 찼습니다.' } }); break; }
+          if (room.players.length >= room.maxPlayers) {
+            send(ws, {
+              type: 'error',
+              payload: { message: '방이 가득 찼습니다.' },
+            });
+            break;
+          }
 
           room.players.push(playerName);
           room.scores[playerName] = 0;
@@ -166,11 +189,23 @@ app.prepare().then(() => {
           clientInfo.playerName = playerName;
 
           send(ws, { type: 'room_joined', payload: { roomId, room } });
-          broadcastToRoom(roomId, { type: 'room_updated', payload: { room } }, ws);
-          broadcastToRoom(roomId, {
-            type: 'chat_message',
-            payload: { sender: 'System', message: `${playerName}님이 입장했습니다.`, timestamp: Date.now() },
-          }, ws);
+          broadcastToRoom(
+            roomId,
+            { type: 'room_updated', payload: { room } },
+            ws,
+          );
+          broadcastToRoom(
+            roomId,
+            {
+              type: 'chat_message',
+              payload: {
+                sender: 'System',
+                message: `${playerName}님이 입장했습니다.`,
+                timestamp: Date.now(),
+              },
+            },
+            ws,
+          );
           break;
         }
 
@@ -180,20 +215,45 @@ app.prepare().then(() => {
 
           const room = rooms.get(roomId);
           if (!room || room.hostName !== playerName) break;
-          if (room.players.length < 2) { send(ws, { type: 'error', payload: { message: '2명 이상이어야 시작할 수 있습니다.' } }); break; }
+          if (room.players.length < 2) {
+            send(ws, {
+              type: 'error',
+              payload: { message: '2명 이상이어야 시작할 수 있습니다.' },
+            });
+            break;
+          }
 
           // Reset scores
           room.scores = {};
-          room.players.forEach((p) => { room.scores[p] = 0; });
+          room.players.forEach((p) => {
+            room.scores[p] = 0;
+          });
 
           // Pick songs
-          const allSongs = shuffle(getSongsForDecades(room.decades ?? ['2000']));
-          const picked = allSongs.slice(0, Math.min(room.totalQuestions ?? DEFAULT_TOTAL_QUESTIONS, allSongs.length));
+          const allSongs = shuffle(
+            getSongsForDecades(room.decades ?? ['2000']),
+          );
+          const picked = allSongs.slice(
+            0,
+            Math.min(
+              room.totalQuestions ?? DEFAULT_TOTAL_QUESTIONS,
+              allSongs.length,
+            ),
+          );
 
           room.status = 'playing';
-          room.game = { songs: picked, currentIndex: 0, answered: false, answeredBy: null, timer: null };
+          room.game = {
+            songs: picked,
+            currentIndex: 0,
+            answered: false,
+            answeredBy: null,
+            timer: null,
+          };
 
-          sendAll(roomId, { type: 'game_started', payload: { totalQuestions: picked.length } });
+          sendAll(roomId, {
+            type: 'game_started',
+            payload: { totalQuestions: picked.length },
+          });
           sendAll(roomId, { type: 'room_updated', payload: { room } });
 
           setTimeout(() => sendQuestion(roomId), 1000);
@@ -211,8 +271,13 @@ app.prepare().then(() => {
           // Check for correct answer
           if (room.status === 'playing' && room.game && !room.game.answered) {
             const song = room.game.songs[room.game.currentIndex];
-            const answers = Array.isArray(song?.answer) ? song.answer : [song?.title];
-            if (song && answers.some((a) => normalize(message) === normalize(a))) {
+            const answers = Array.isArray(song?.answer)
+              ? song.answer
+              : [song?.title];
+            if (
+              song &&
+              answers.some((a) => normalize(message) === normalize(a))
+            ) {
               room.game.answered = true;
               room.game.answeredBy = playerName;
               if (room.game.timer) clearTimeout(room.game.timer);
@@ -220,13 +285,21 @@ app.prepare().then(() => {
               room.scores[playerName] = (room.scores[playerName] ?? 0) + 1;
 
               // Broadcast the correct answer chat first
-              const chatMsg = { sender: playerName, message, timestamp: Date.now() };
+              const chatMsg = {
+                sender: playerName,
+                message,
+                timestamp: Date.now(),
+              };
               sendAll(roomId, { type: 'chat_message', payload: chatMsg });
 
               // Then announce correct
               sendAll(roomId, {
                 type: 'answer_correct',
-                payload: { playerName, songTitle: song.title, scores: room.scores },
+                payload: {
+                  playerName,
+                  songTitle: song.title,
+                  scores: room.scores,
+                },
               });
               sendAll(roomId, { type: 'room_updated', payload: { room } });
 
@@ -236,7 +309,11 @@ app.prepare().then(() => {
             }
           }
 
-          const chatMsg = { sender: playerName, message, timestamp: Date.now() };
+          const chatMsg = {
+            sender: playerName,
+            message,
+            timestamp: Date.now(),
+          };
           if (room.messages) room.messages.push(chatMsg);
           const payload = { type: 'chat_message', payload: chatMsg };
           send(ws, payload);
@@ -248,7 +325,12 @@ app.prepare().then(() => {
           const { roomId, playerName } = clientInfo;
           if (!roomId) break;
           const room = rooms.get(roomId);
-          if (!room || room.hostName !== playerName || room.status !== 'playing') break;
+          if (
+            !room ||
+            room.hostName !== playerName ||
+            room.status !== 'playing'
+          )
+            break;
           if (!room.game || room.game.answered) break;
 
           room.game.answered = true;
@@ -257,7 +339,11 @@ app.prepare().then(() => {
           const song = room.game.songs[room.game.currentIndex];
           sendAll(roomId, {
             type: 'chat_message',
-            payload: { sender: 'System', message: `⏭ 스킵! 정답은 "${song.title}" 이었습니다.`, timestamp: Date.now() },
+            payload: {
+              sender: 'System',
+              message: `⏭ 스킵! 정답은 "${song.title}" 이었습니다.`,
+              timestamp: Date.now(),
+            },
           });
 
           room.game.currentIndex++;
@@ -293,7 +379,11 @@ app.prepare().then(() => {
         broadcastToRoom(roomId, { type: 'room_updated', payload: { room } });
         broadcastToRoom(roomId, {
           type: 'chat_message',
-          payload: { sender: 'System', message: `${playerName}님이 나갔습니다.`, timestamp: Date.now() },
+          payload: {
+            sender: 'System',
+            message: `${playerName}님이 나갔습니다.`,
+            timestamp: Date.now(),
+          },
         });
       }
     }
@@ -301,7 +391,8 @@ app.prepare().then(() => {
     clientInfo.playerName = null;
   }
 
-  server.listen(3000, () => {
-    console.log('> Ready on http://localhost:3000');
+  const port = process.env.PORT || 3000;
+  server.listen(port, () => {
+    console.log(`> Ready on http://localhost:${port}`);
   });
 });
