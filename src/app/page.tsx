@@ -121,13 +121,13 @@ export default function Home() {
             <input
               type="range"
               min={2}
-              max={8}
+              max={12}
               value={maxPlayers}
               onChange={(e) => setMaxPlayers(Number(e.target.value))}
               className="w-full accent-purple-500"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>2명</span><span>8명</span>
+              <span>2명</span><span>12명</span>
             </div>
           </div>
 
