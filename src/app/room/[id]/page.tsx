@@ -33,7 +33,28 @@ export default function RoomPage() {
     winner: string;
   } | null>(null);
   const [showArtist, setShowArtist] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const pendingVideoIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const playBeep = (count: number) => {
+    const src = count === 3 ? '/beep.wav' : count === 2 ? '/beep-mid.wav' : '/beep-last.wav';
+    const audio = new Audio(src);
+    audio.play().catch(() => {});
+  };
+
+  // 카운트다운 처리
+  useEffect(() => {
+    if (countdown === null) return;
+    if (countdown === 0) {
+      setVideoId(pendingVideoIdRef.current);
+      setCountdown(null);
+      return;
+    }
+    if (isHost) playBeep(countdown);
+    const timer = setTimeout(() => setCountdown((c) => (c !== null ? c - 1 : null)), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 새 문제마다 가수 힌트를 5초 후에 표시
   useEffect(() => {
@@ -59,7 +80,9 @@ export default function RoomPage() {
       } else if (msg.type === 'next_question') {
         setQuestion(msg.payload);
         setLastCorrect(null);
-        setVideoId(msg.payload.videoId);
+        setVideoId(null);
+        pendingVideoIdRef.current = msg.payload.videoId;
+        setCountdown(3);
       } else if (msg.type === 'answer_correct') {
         setLastCorrect({
           playerName: msg.payload.playerName,
@@ -123,6 +146,21 @@ export default function RoomPage() {
 
   return (
     <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
+      {/* 카운트다운 오버레이 */}
+      {countdown !== null && countdown > 0 && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none bg-black/40">
+          <div
+            key={countdown}
+            className="text-[14rem] font-black text-white select-none"
+            style={{
+              textShadow: '0 0 60px rgba(168,85,247,1), 0 0 120px rgba(168,85,247,0.6)',
+              animation: 'countdown-pop 0.9s ease-out forwards',
+            }}
+          >
+            {countdown}
+          </div>
+        </div>
+      )}
       {/* Header */}
       <header className="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
