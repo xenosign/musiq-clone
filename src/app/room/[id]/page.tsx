@@ -260,23 +260,21 @@ export default function RoomPage() {
                       </div>
                     )}
                   </div>
-                  {/* YouTube 플레이어 — 방장만 재생 */}
-                  {isHost && (
-                    <div className="w-56 shrink-0">
-                      {videoId ? (
-                        <YoutubePlayer videoId={videoId} />
-                      ) : (
-                        <div className="h-full bg-gray-800 rounded-xl flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <div className="text-2xl mb-1 animate-pulse">
-                              🎵
-                            </div>
-                            <p className="text-xs">로딩 중...</p>
+                  {/* YouTube 플레이어 — 모든 참가자 재생 */}
+                  <div className="w-56 shrink-0">
+                    {videoId ? (
+                      <YoutubePlayer videoId={videoId} />
+                    ) : (
+                      <div className="h-full bg-gray-800 rounded-xl flex items-center justify-center">
+                        <div className="text-center text-gray-500">
+                          <div className="text-2xl mb-1 animate-pulse">
+                            🎵
                           </div>
+                          <p className="text-xs">로딩 중...</p>
                         </div>
-                      )}
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
