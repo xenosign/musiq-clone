@@ -83,6 +83,10 @@ export default function RoomPage() {
   useEffect(() => {
     if (countdown === null) return;
     if (countdown === 0) {
+      // AudioContext가 오디오 세션을 점령하지 않도록 suspend
+      if (audioCtxRef.current) {
+        audioCtxRef.current.suspend().catch(() => {});
+      }
       setVideoId(pendingVideoIdRef.current);
       setCountdown(null);
       return;
@@ -182,8 +186,8 @@ export default function RoomPage() {
 
   return (
     <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
-      {/* YoutubePlayer — 항상 오디오 재생, 인스턴스 하나만 유지 */}
-      <YoutubePlayer videoId={videoId} />
+      {/* YoutubePlayer — hostOnlyMusic이면 호스트만, 아니면 전체 재생 */}
+      {(!room?.hostOnlyMusic || isHost) && <YoutubePlayer videoId={videoId} />}
       {/* 카운트다운 오버레이 */}
       {countdown !== null && countdown > 0 && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none bg-black/40">

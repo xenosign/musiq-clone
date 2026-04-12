@@ -14,6 +14,7 @@ export default function Home() {
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [totalQuestions, setTotalQuestions] = useState(10);
   const [selectedDecades, setSelectedDecades] = useState<Decade[]>(['2000']);
+  const [hostOnlyMusic, setHostOnlyMusic] = useState(false);
   const [rooms, setRooms] = useState<RoomSummary[]>([]);
   const [error, setError] = useState('');
 
@@ -43,7 +44,7 @@ export default function Home() {
   const handleCreate = () => {
     if (!playerName.trim()) return setError('닉네임을 입력해주세요.');
     setError('');
-    send({ type: 'create_room', payload: { maxPlayers, hostName: playerName.trim(), decades: selectedDecades, totalQuestions } });
+    send({ type: 'create_room', payload: { maxPlayers, hostName: playerName.trim(), decades: selectedDecades, totalQuestions, hostOnlyMusic } });
   };
 
   const handleJoin = (roomId: string) => {
@@ -146,6 +147,27 @@ export default function Home() {
               <span>5문제</span><span>30문제</span>
             </div>
           </div>
+
+          {/* 호스트만 음악 재생 토글 */}
+          <button
+            type="button"
+            onClick={() => setHostOnlyMusic((v) => !v)}
+            className={`flex items-center justify-between w-full px-4 py-3 rounded-xl border transition ${
+              hostOnlyMusic
+                ? 'border-[#FF9900] bg-[#FF9900]/10 text-white'
+                : 'border-gray-600 bg-gray-700 text-gray-300'
+            }`}
+          >
+            <div className="flex flex-col items-start gap-0.5">
+              <span className="text-sm font-semibold">🎵 호스트만 음악 재생</span>
+              <span className="text-xs text-gray-400">
+                {hostOnlyMusic ? '호스트만 음악을 들을 수 있습니다' : '모든 참가자가 음악을 듣습니다'}
+              </span>
+            </div>
+            <div className={`w-11 h-6 rounded-full transition-colors relative shrink-0 ${hostOnlyMusic ? 'bg-[#FF9900]' : 'bg-gray-500'}`}>
+              <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${hostOnlyMusic ? 'translate-x-5' : 'translate-x-0.5'}`} />
+            </div>
+          </button>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button

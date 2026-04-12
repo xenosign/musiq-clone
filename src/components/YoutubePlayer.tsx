@@ -80,6 +80,8 @@ export function YoutubePlayer({ videoId }: { videoId: string | null }) {
             if (event.data === 1) { // PLAYING
               if (timerRef.current) clearTimeout(timerRef.current);
               setNeedsInteraction(false);
+            } else if (event.data === 2) { // PAUSED — 예기치 않은 정지 시 자동 재개
+              try { playerRef.current?.playVideo(); } catch {}
             }
           },
           onError: () => {
@@ -110,15 +112,16 @@ export function YoutubePlayer({ videoId }: { videoId: string | null }) {
 
   return (
     <>
-      {/* 화면 밖에 충분한 크기로 배치 — YouTube 재생 정책 통과 */}
+      {/* 뷰포트 내에 visibility:hidden으로 배치 — YouTube의 off-screen 감지 우회 */}
       <div
         ref={wrapperRef}
         style={{
           position: 'fixed',
-          top: '-9999px',
-          left: '-9999px',
+          bottom: 0,
+          right: 0,
           width: '320px',
           height: '180px',
+          visibility: 'hidden',
           pointerEvents: 'none',
         }}
       />

@@ -132,7 +132,7 @@ app.prepare().then(() => {
         }
 
         case 'create_room': {
-          const { maxPlayers, hostName, decades, totalQuestions } = msg.payload;
+          const { maxPlayers, hostName, decades, totalQuestions, hostOnlyMusic } = msg.payload;
           const roomId = randomUUID().slice(0, 8).toUpperCase();
           const room = {
             id: roomId,
@@ -147,6 +147,7 @@ app.prepare().then(() => {
             createdAt: Date.now(),
             messages: [],
             game: null,
+            hostOnlyMusic: Boolean(hostOnlyMusic),
           };
           rooms.set(roomId, room);
           send(ws, { type: 'room_created', payload: { roomId, room } });

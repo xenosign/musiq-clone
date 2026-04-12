@@ -54,6 +54,7 @@ export interface Room {
   decades: Decade[];
   status: 'waiting' | 'playing' | 'finished';
   createdAt: number;
+  hostOnlyMusic: boolean;
 }
 
 export interface RoomSummary {
