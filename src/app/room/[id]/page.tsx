@@ -511,7 +511,7 @@ export default function RoomPage() {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && sendChat()}
+                  onKeyDown={(e) => e.key === 'Enter' && !e.nativeEvent.isComposing && sendChat()}
                   placeholder={
                     room?.status === 'playing'
                       ? '정답 또는 채팅 입력...'

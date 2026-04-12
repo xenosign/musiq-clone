@@ -191,20 +191,6 @@ const SONGS = {
       youtubeId: 'SM9U8RCj_i4',
     },
     {
-      title: '미소 속에 비친 그대',
-      artist: '신승훈',
-      year: 1989,
-      answer: ['미소속에비친그대'],
-      youtubeId: 'k4X0z_LvDDs',
-    },
-    {
-      title: '꼬마 인형',
-      artist: '최진희',
-      year: 1987,
-      answer: ['꼬마인형'],
-      youtubeId: 'NWEb8GNeCb8',
-    },
-    {
       title: '백만송이 장미',
       artist: '심수봉',
       year: 1988,
@@ -357,13 +343,6 @@ const SONGS = {
       year: 1985,
       answer: ['가까이하기엔너무당신'],
       youtubeId: '-vtyEHmCH58',
-    },
-    {
-      title: '비오는 날의 수채화',
-      artist: '김현식, 강인원, 권인하',
-      year: 1989,
-      answer: ['비오는날의수채화'],
-      youtubeId: 'YPorHdplVcA',
     },
     {
       title: '기분 좋은 날',
@@ -609,13 +588,6 @@ const SONGS = {
       year: 1989,
       answer: ['비오는날의수채화'],
       youtubeId: 'YPorHdplVcA',
-    },
-    {
-      title: '개똥벌레',
-      artist: '신형원',
-      year: 1987,
-      answer: ['개똥벌레'],
-      youtubeId: 'SM9U8RCj_i4',
     },
     {
       title: '터',
@@ -949,13 +921,6 @@ const SONGS = {
       youtubeId: 'dQxh2oja4B8',
     },
     {
-      title: '슬픈 언약식',
-      artist: '김정민',
-      year: 1995,
-      answer: ['슬픈언약식'],
-      youtubeId: 'm35aJaO1TMA',
-    },
-    {
       title: '너를 사랑해',
       artist: '한동준',
       year: 1991,
@@ -1199,6 +1164,13 @@ const SONGS = {
       year: 1998,
       answer: ['착한사랑'],
       youtubeId: '1okiVchIIU8',
+    },
+    {
+      title: '편지',
+      artist: '김광진',
+      year: 1994,
+      answer: ['편지'],
+      youtubeId: 'ts6a_GAoghA',
     },
     {
       title: '다시 사랑한다 말할까',
@@ -1686,13 +1658,6 @@ const SONGS = {
       youtubeId: 'g3yjD6i7byA',
     },
     {
-      title: '사랑해',
-      artist: '라디',
-      year: 2002,
-      answer: ['사랑해'],
-      youtubeId: 'BmjmC_ML0MU',
-    },
-    {
       title: '안녕이라고 말하지마',
       artist: '이승철',
       year: 2001,
@@ -1711,7 +1676,7 @@ const SONGS = {
       artist: '성시경',
       year: 2002,
       answer: ['넌감동이었어'],
-      youtubeId: 'JG8DufK1xP0',
+      youtubeId: 'YZX9aYh7HUo',
     },
     {
       title: '우린 제법 잘 어울려요',
@@ -1826,13 +1791,6 @@ const SONGS = {
       youtubeId: 'eCMhO5P8QpI',
     },
     {
-      title: 'Wild Flower',
-      artist: '박효신',
-      year: 2004,
-      answer: ['wildflower'],
-      youtubeId: 'ZtcM3KhgF-s',
-    },
-    {
       title: '사랑해서 사랑해서',
       artist: '신승훈',
       year: 2002,
@@ -1851,14 +1809,14 @@ const SONGS = {
       artist: '신화',
       year: 2002,
       answer: ['ipray4u', '아이프레이포유'],
-      youtubeId: 'GIf50xe1LR8',
+      youtubeId: 'Z3juFXy9jC8',
     },
     {
       title: 'Wild Eyes',
       artist: '신화',
       year: 2001,
       answer: ['wildeyes', '와일드아이즈'],
-      youtubeId: 'w6u4NRind_8',
+      youtubeId: 'uLXp7Vv7sNE',
     },
     {
       title: 'T.O.P',
@@ -1888,13 +1846,7 @@ const SONGS = {
       answer: ['0%', '영퍼센트'],
       youtubeId: '1_UEcqmHHZY',
     },
-    {
-      title: '편지',
-      artist: '김광진',
-      year: 2000,
-      answer: ['편지'],
-      youtubeId: 'ts6a_GAoghA',
-    },
+
     {
       title: '그녀는 예뻤다',
       artist: '박진영',
@@ -1914,7 +1866,7 @@ const SONGS = {
       artist: '보아',
       year: 2002,
       answer: ['listentomyheart', '리슨투마이하트'],
-      youtubeId: 'GpuUbLjSoJE',
+      youtubeId: 'QlnsR0XjlE0',
     },
     {
       title: 'Atlantis Princess',
@@ -1956,7 +1908,7 @@ const SONGS = {
       artist: '동방신기',
       year: 2004,
       answer: ['triangle', '트라이앵글'],
-      youtubeId: 'p3dxVQsDwyU',
+      youtubeId: 'MSS_h875p7g',
     },
     {
       title: 'Tell Me Goodbye',
@@ -2176,13 +2128,6 @@ const SONGS = {
       year: 2007,
       answer: ['tellme', '텔미'],
       youtubeId: '-ikYiWp0H5g',
-    },
-    {
-      title: '미인',
-      artist: '이기찬',
-      year: 2007,
-      answer: ['미인'],
-      youtubeId: 'j7uur1HWHwA',
     },
     {
       title: '하루하루',
@@ -2467,7 +2412,7 @@ const SONGS = {
     {
       title: 'Honey Honey',
       artist: '거북이',
-      year: 2000,
+      year: 2005,
       answer: ['honeyhoney', '허니허니'],
       youtubeId: 'IIUNUtSaQM4',
     },
@@ -2479,7 +2424,7 @@ const SONGS = {
       youtubeId: '-CYezUeha1Q',
     },
     {
-      title: 'Singlalala',
+      title: '싱랄라',
       artist: '거북이',
       year: 2008,
       answer: ['싱랄라'],
@@ -2589,13 +2534,6 @@ const SONGS = {
       year: 2008,
       answer: ['천국'],
       youtubeId: 'yNINvfCe-4Q',
-    },
-    {
-      title: 'Lies',
-      artist: '빅뱅',
-      year: 2007,
-      answer: ['거짓말'],
-      youtubeId: 'ZwKA-9t3T8E',
     },
     {
       title: 'Strong Baby',
@@ -2743,13 +2681,6 @@ const SONGS = {
       year: 2009,
       answer: ['touchme', '터치미'],
       youtubeId: '28OzQ72Cw8c',
-    },
-    {
-      title: '눈물 씻고 화장하고',
-      artist: '렉시',
-      year: 2005,
-      answer: ['눈물씻고화장하고'],
-      youtubeId: 'XiGuA9U8XQI',
     },
     {
       title: '원하고 원망하죠',
@@ -3237,13 +3168,6 @@ const SONGS = {
       youtubeId: 'ehqVxQ7wzbY',
     },
     {
-      title: 'Alone',
-      artist: '씨스타',
-      year: 2012,
-      answer: ['나혼자', 'alone'],
-      youtubeId: 'E0ZHXVp_wUE',
-    },
-    {
       title: 'Loving U',
       artist: '씨스타',
       year: 2012,
@@ -3303,7 +3227,7 @@ const SONGS = {
       title: 'That XX',
       artist: '지드래곤',
       year: 2012,
-      answer: ['그xx'],
+      answer: ['그xx', '그새끼'],
       youtubeId: 'Uyh1GIuL1zU',
     },
     {
@@ -3329,13 +3253,6 @@ const SONGS = {
     },
     {
       title: '이름이 뭐예요?',
-      artist: '4minute',
-      year: 2013,
-      answer: ['이름이뭐예요'],
-      youtubeId: 'jKVVUSIqmEs',
-    },
-    {
-      title: "What's Your Name?",
       artist: '4minute',
       year: 2013,
       answer: ['이름이뭐예요'],
@@ -3398,13 +3315,6 @@ const SONGS = {
       youtubeId: 'h_lGsTnWohA',
     },
     {
-      title: 'Expectation',
-      artist: '걸스데이',
-      year: 2013,
-      answer: ['기대해'],
-      youtubeId: 'hjZyGLlNvuc',
-    },
-    {
       title: 'Something',
       artist: '걸스데이',
       year: 2014,
@@ -3436,14 +3346,14 @@ const SONGS = {
       title: '단발머리',
       artist: 'AOA',
       year: 2014,
-      answer: ['단발머리', 'short hair'],
+      answer: ['단발머리', 'shorthair'],
       youtubeId: 'H8MdaqKFuBI',
     },
     {
       title: '사뿐사뿐',
       artist: 'AOA',
       year: 2014,
-      answer: ['사뿐사뿐', 'like a cat'],
+      answer: ['사뿐사뿐', 'likeacat'],
       youtubeId: 'aXjwPTJZymw',
     },
     {
@@ -3946,13 +3856,6 @@ const SONGS = {
       youtubeId: 'Uy0Sj7ID_XU',
     },
     {
-      title: '뿜뿜',
-      artist: '모모랜드',
-      year: 2018,
-      answer: ['뿜뿜', 'bboombboom'],
-      youtubeId: 'FDlO-K8cWGY',
-    },
-    {
       title: 'Bad Boy',
       artist: '레드벨벳',
       year: 2018,
@@ -4118,7 +4021,7 @@ const SONGS = {
       artist: 'ITZY',
       year: 2019,
       answer: ['icy', '아이씨'],
-      youtubeId: 'xgiN9zNZCuM',
+      youtubeId: '1npbRkSl1ec',
     },
     {
       title: 'Feel Special',
@@ -4152,7 +4055,7 @@ const SONGS = {
       title: 'Dynamite',
       artist: 'BTS',
       year: 2020,
-      answer: ['dynamite', '다이너마이트'],
+      answer: ['dynamite', '다이너마이트', '다이나마이트'],
       youtubeId: 'OiMWFojB9Ok',
     },
     {
@@ -4417,20 +4320,6 @@ const SONGS = {
       youtubeId: 'YYdbo8XzO4g',
     },
     {
-      title: 'Traffic Light',
-      artist: '이무진',
-      year: 2021,
-      answer: ['신호등', 'trafficlight'],
-      youtubeId: 'SK6Sm2Ki9tI',
-    },
-    {
-      title: 'Dun Dun Dance',
-      artist: '오마이걸',
-      year: 2021,
-      answer: ['dundundance', '던던댄스'],
-      youtubeId: 'HzOjwL7IP_o',
-    },
-    {
       title: "Rollin'",
       artist: '브레이브걸스',
       year: 2021,
@@ -4478,13 +4367,6 @@ const SONGS = {
       year: 2021,
       answer: ['좋아좋아'],
       youtubeId: 'lp3XvkNGCXU',
-    },
-    {
-      title: '비와 당신',
-      artist: '이무진',
-      year: 2021,
-      answer: ['비와당신'],
-      youtubeId: 'edbIsqPlJ8w',
     },
     {
       title: '낙하 (with 아이유)',
@@ -4576,20 +4458,6 @@ const SONGS = {
       year: 2021,
       answer: ['작은것들을위한시', 'boywithluv'],
       youtubeId: '3J7rt7bkDCY',
-    },
-    {
-      title: '치맛바람 (Chi Mat Ba Ram)',
-      artist: '브레이브걸스',
-      year: 2021,
-      answer: ['치맛바람'],
-      youtubeId: '6nERc12lBMU',
-    },
-    {
-      title: '안녕 (Hello)',
-      artist: '조이 (JOY)',
-      year: 2021,
-      answer: ['안녕', 'hello'],
-      youtubeId: 'ce_R41JTJeE',
     },
     {
       title: '나비효과',
@@ -4944,13 +4812,6 @@ const SONGS = {
       youtubeId: 'McidaTgrQB0',
     },
     {
-      title: '취중고백',
-      artist: '김민석 (멜로망스)',
-      year: 2022,
-      answer: ['취중고백'],
-      youtubeId: 'FCrMKhrFH7A',
-    },
-    {
       title: 'Beyond Love',
       artist: '빅나티 (feat. 10CM)',
       year: 2022,
@@ -5021,13 +4882,6 @@ const SONGS = {
       youtubeId: 'stibNqDOo1g',
     },
     {
-      title: 'strawberry moon',
-      artist: '아이유',
-      year: 2022,
-      answer: ['strawberrymoon', '스트로베리문'],
-      youtubeId: 'bP3VLTbN3LE',
-    },
-    {
       title: '드라마',
       artist: '아이유',
       year: 2022,
@@ -5040,13 +4894,6 @@ const SONGS = {
       year: 2022,
       answer: ['스티커사진'],
       youtubeId: 'oaftiJ_JIWI',
-    },
-    {
-      title: 'FEARLESS',
-      artist: 'LE SSERAFIM',
-      year: 2022,
-      answer: ['fearless', '피어리스'],
-      youtubeId: 'Wk3Vxt3knnI',
     },
     {
       title: 'O.O',
@@ -5119,13 +4966,6 @@ const SONGS = {
       year: 2023,
       answer: ['unforgiven', '언포기븐'],
       youtubeId: 'b1Y4BJ73yU8',
-    },
-    {
-      title: 'Fast Forward',
-      artist: '전소미',
-      year: 2023,
-      answer: ['fastforward', '패스트포워드'],
-      youtubeId: 'JXTiRUb_n1I',
     },
     {
       title: 'Baddie',
@@ -5229,7 +5069,7 @@ const SONGS = {
       title: 'Cool With You',
       artist: 'NewJeans',
       year: 2023,
-      answer: ['coolwithyou', '쿨위드유'],
+      answer: ['coolwithyou', '쿨위드유', '쿨위뜨유'],
       youtubeId: 'Wb-WCbHXnAw',
     },
     {
@@ -5408,13 +5248,6 @@ const SONGS = {
       youtubeId: '3AP_zA-iU0w',
     },
     {
-      title: 'Cool With You',
-      artist: 'NewJeans',
-      year: 2023,
-      answer: ['coolwithyou', '쿨위드유'],
-      youtubeId: 'Wb-WCbHXnAw',
-    },
-    {
       title: 'New Jeans',
       artist: 'NewJeans',
       year: 2023,
@@ -5469,13 +5302,6 @@ const SONGS = {
       year: 2023,
       answer: ['음악의신', 'godofmusic'],
       youtubeId: 'xBKmz926CXU',
-    },
-    {
-      title: 'To. X',
-      artist: '태연',
-      year: 2023,
-      answer: ['tox', '투엑스'],
-      youtubeId: 'MpYuVButQ5A',
     },
   ],
   2024: [
@@ -5569,13 +5395,6 @@ const SONGS = {
       year: 2024,
       answer: ['shootingstar', '슈팅스타'],
       youtubeId: 'R-glyaIXPbA',
-    },
-    {
-      title: 'Sheesh',
-      artist: 'BABYMONSTER',
-      year: 2024,
-      answer: ['sheesh', '쉬쉬'],
-      youtubeId: 'lEThmt0saQg',
     },
     {
       title: 'Love wins all',
@@ -5739,13 +5558,6 @@ const SONGS = {
       youtubeId: 'UIBmWmDP1RU',
     },
     {
-      title: 'Super Power',
-      artist: '지드래곤',
-      year: 2024,
-      answer: ['superpower', '슈퍼파워'],
-      youtubeId: 'cmvO6x72d2k',
-    },
-    {
       title: 'Lucky Girl Syndrome',
       artist: 'ILLIT (아일릿)',
       year: 2024,
@@ -5844,10 +5656,10 @@ const SONGS = {
       youtubeId: 'qUzNtdSlD5E',
     },
     {
-      title: 'Shoosh',
+      title: 'Sheesh',
       artist: 'BABYMONSTER (베이비몬스터)',
       year: 2024,
-      answer: ['sheesh', '쉬쉬'],
+      answer: ['sheesh', '쉬', '쉬스', '쉬시'],
       youtubeId: 'lEThmt0saQg',
     },
     {
@@ -5916,20 +5728,6 @@ const SONGS = {
       youtubeId: 'fLi0EJfi_vg',
     },
     {
-      title: 'Whiplash',
-      artist: 'aespa',
-      year: 2025,
-      answer: ['위플래쉬', 'whiplash'],
-      youtubeId: 'kngr_3FvB-M',
-    },
-    {
-      title: '나는 반딧불',
-      artist: '황가람',
-      year: 2025,
-      answer: ['별별별', 'starstarstar'],
-      youtubeId: 'c8JdUI51NZg',
-    },
-    {
       title: 'SWIM',
       artist: 'BTS',
       year: 2025,
@@ -5975,7 +5773,7 @@ const SONGS = {
       title: '기쁨, 슬픔, 아름다운 마음',
       artist: '악뮤',
       year: 2025,
-      answer: ['기쁨슬픔아름다운 마음', '기슴아'],
+      answer: ['기쁨슬픔아름다운마음', '기슴아'],
       youtubeId: 'F5JacLuM7ko',
     },
     {
@@ -6026,13 +5824,6 @@ const SONGS = {
       year: 2025,
       answer: ['moonlight', '문라이트'],
       youtubeId: 'RnH7MRVi3C4',
-    },
-    {
-      title: 'REPLAY',
-      artist: 'RIIZE',
-      year: 2025,
-      answer: ['리플레이', 'replay'],
-      youtubeId: 'UyEkTQ0OVXw',
     },
     {
       title: 'Universe',
@@ -6091,25 +5882,11 @@ const SONGS = {
       youtubeId: 'XDbL5N3LRKw',
     },
     {
-      title: '내 곁에 있어줘',
-      artist: '임영웅',
-      year: 2025,
-      answer: ['내곁에있어줘'],
-      youtubeId: 'JPPIrXdocjQ',
-    },
-    {
       title: 'REVERIE',
       artist: '아이유',
       year: 2025,
       answer: ['레버리', 'reverie'],
       youtubeId: 'pSO57xrsQRc',
-    },
-    {
-      title: 'Thunder',
-      artist: 'Stray Kids',
-      year: 2025,
-      answer: ['썬더', 'thunder'],
-      youtubeId: 'IYQ8rJzRRLU',
     },
     {
       title: 'WILD',
@@ -6159,13 +5936,6 @@ const SONGS = {
       year: 2025,
       answer: ['바이트', 'bite'],
       youtubeId: '0ggHZA8jcLw',
-    },
-    {
-      title: 'Super Junior',
-      artist: 'NCT DREAM',
-      year: 2025,
-      answer: ['슈퍼주니어'],
-      youtubeId: 'jamcQM3KYIo',
     },
     {
       title: 'Endless',
