@@ -1609,11 +1609,11 @@ const SONGS = {
       youtubeId: 'Ecw1roc5uSE',
     },
     {
-      title: '학교종이 땡땡땡',
+      title: '빙고',
       artist: '거북이',
-      year: 2001,
-      answer: ['학교종이땡땡땡'],
-      youtubeId: 'BGOCdFEA39M',
+      year: 2004,
+      answer: ['빙고', 'bingo', '아싸'],
+      youtubeId: 'dRXqAYWZw_c',
     },
     {
       title: '미쳐가',
@@ -1662,7 +1662,7 @@ const SONGS = {
       artist: '이승철',
       year: 2001,
       answer: ['안녕이라고말하지마'],
-      youtubeId: 'nDfusnFrC5g',
+      youtubeId: 'lgs6hErMz8k',
     },
     {
       title: '미소천사',
@@ -2007,13 +2007,6 @@ const SONGS = {
       year: 2001,
       answer: ['또한번사랑은가고'],
       youtubeId: 'ur-HTlRqWY0',
-    },
-    {
-      title: '심장병',
-      artist: '이지혜',
-      year: 2004,
-      answer: ['심장병'],
-      youtubeId: 'f3BazhAO-d8',
     },
     {
       title: 'Sweet Dream',

@@ -8,7 +8,13 @@ declare global {
     onYouTubeIframeAPIReady?: () => void;
   }
 }
-interface YTPlayer { destroy(): void; stopVideo(): void; playVideo(): void; }
+interface YTPlayer {
+  destroy(): void;
+  stopVideo(): void;
+  playVideo(): void;
+  unMute(): void;
+  setVolume(vol: number): void;
+}
 
 let apiLoaded = false;
 const readyCallbacks: (() => void)[] = [];
@@ -51,14 +57,24 @@ export function YoutubePlayer({ videoId }: { videoId: string | null }) {
 
       playerRef.current = new window.YT.Player(el, {
         videoId,
-        width: '1',
-        height: '1',
-        playerVars: { autoplay: 1, rel: 0, controls: 0, playsinline: 1 },
+        width: '320',
+        height: '180',
+        // mute:1 로 autoplay 정책 통과 후 즉시 unmute
+        playerVars: { autoplay: 1, mute: 1, rel: 0, controls: 0, playsinline: 1 },
         events: {
           onReady: (event: { target: YTPlayer }) => {
-            try { event.target.playVideo(); } catch {}
-            // 2초 후에도 재생 안 되면 버튼 표시
-            timerRef.current = setTimeout(() => setNeedsInteraction(true), 2000);
+            try {
+              event.target.playVideo();
+              // 재생 시작되면 소리 복구
+              setTimeout(() => {
+                try {
+                  event.target.unMute();
+                  event.target.setVolume(100);
+                } catch {}
+              }, 300);
+            } catch {}
+            // 3초 후에도 재생 안 되면 버튼 표시
+            timerRef.current = setTimeout(() => setNeedsInteraction(true), 3000);
           },
           onStateChange: (event: { data: number }) => {
             if (event.data === 1) { // PLAYING
@@ -84,16 +100,27 @@ export function YoutubePlayer({ videoId }: { videoId: string | null }) {
   }, [videoId]);
 
   const handlePlay = () => {
-    try { playerRef.current?.playVideo(); } catch {}
+    try {
+      playerRef.current?.playVideo();
+      playerRef.current?.unMute();
+      playerRef.current?.setVolume(100);
+    } catch {}
     setNeedsInteraction(false);
   };
 
   return (
     <>
-      {/* 숨겨진 1px 플레이어 — 오디오만 재생 */}
+      {/* 화면 밖에 충분한 크기로 배치 — YouTube 재생 정책 통과 */}
       <div
         ref={wrapperRef}
-        style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0, pointerEvents: 'none' }}
+        style={{
+          position: 'fixed',
+          top: '-9999px',
+          left: '-9999px',
+          width: '320px',
+          height: '180px',
+          pointerEvents: 'none',
+        }}
       />
       {/* 자동재생 차단 시 재생 버튼 표시 */}
       {needsInteraction && (
@@ -105,7 +132,7 @@ export function YoutubePlayer({ videoId }: { videoId: string | null }) {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 9999,
-            background: '#ea580c',
+            background: '#FF9900',
             color: 'white',
             border: 'none',
             borderRadius: 12,
