@@ -1655,7 +1655,7 @@ const SONGS = {
       artist: '이지훈, 신혜성',
       year: 2001,
       answer: ['인형'],
-      youtubeId: 'g3yjD6i7byA',
+      youtubeId: '38a6tFduAHE',
     },
     {
       title: '안녕이라고 말하지마',
@@ -1946,18 +1946,11 @@ const SONGS = {
       youtubeId: 'QIxYHNiMePY',
     },
     {
-      title: '너는 내 운명',
-      artist: '하하',
-      year: 2004,
-      answer: ['너는내운명'],
-      youtubeId: 'O8MIMvHNIXk',
-    },
-    {
       title: '그녀를 사랑해줘요',
       artist: '하동균',
       year: 2004,
       answer: ['그녀를사랑해줘요'],
-      youtubeId: 'zmJ4aBsD-t0',
+      youtubeId: 'cK0R-zuxMHE',
     },
     {
       title: '가시나무',
