@@ -41,11 +41,42 @@ export default function RoomPage() {
   const [countdown, setCountdown] = useState<number | null>(null);
   const pendingVideoIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // 첫 상호작용 시 AudioContext unlock (모바일 자동재생 정책 대응)
+  useEffect(() => {
+    const unlock = () => {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      }
+      audioCtxRef.current.resume().catch(() => {});
+    };
+    document.addEventListener('touchstart', unlock, { once: true });
+    document.addEventListener('click', unlock, { once: true });
+    return () => {
+      document.removeEventListener('touchstart', unlock);
+      document.removeEventListener('click', unlock);
+    };
+  }, []);
 
   const playBeep = (count: number) => {
-    const src = count === 3 ? '/beep.wav' : count === 2 ? '/beep-mid.wav' : '/beep-last.wav';
-    const audio = new Audio(src);
-    audio.play().catch(() => {});
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      // 3→낮은음, 2→중간음, 1→높은음
+      osc.frequency.value = count === 3 ? 440 : count === 2 ? 550 : 880;
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
+    } catch {}
   };
 
   // 카운트다운 처리
@@ -56,7 +87,7 @@ export default function RoomPage() {
       setCountdown(null);
       return;
     }
-    if (isHost) playBeep(countdown);
+    playBeep(countdown);
     const timer = setTimeout(() => setCountdown((c) => (c !== null ? c - 1 : null)), 1000);
     return () => clearTimeout(timer);
   }, [countdown]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -151,6 +182,8 @@ export default function RoomPage() {
 
   return (
     <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
+      {/* YoutubePlayer — 항상 오디오 재생, 인스턴스 하나만 유지 */}
+      <YoutubePlayer videoId={videoId} />
       {/* 카운트다운 오버레이 */}
       {countdown !== null && countdown > 0 && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none bg-black/40">
@@ -301,22 +334,12 @@ export default function RoomPage() {
                       </div>
                     )}
                   </div>
-                  {/* YouTube 플레이어 — 데스크탑만 표시, 모바일은 오디오만 */}
-                  <div className="hidden md:block w-56 shrink-0">
-                    {videoId ? (
-                      <YoutubePlayer videoId={videoId} />
-                    ) : (
-                      <div className="h-full bg-gray-800 rounded-xl flex items-center justify-center">
-                        <div className="text-center text-gray-500">
-                          <div className="text-2xl mb-1 animate-pulse text-orange-500">♪</div>
-                          <p className="text-xs">로딩 중...</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {/* 모바일: YoutubePlayer 오디오만 (숨김) */}
-                  <div className="md:hidden">
-                    <YoutubePlayer videoId={videoId} />
+                  {/* 데스크탑: 재생 상태 표시 UI */}
+                  <div className="hidden md:flex w-56 shrink-0 bg-gray-800 rounded-xl items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <div className={`text-2xl mb-1 text-orange-500 ${videoId ? 'animate-pulse' : ''}`}>♪</div>
+                      <p className="text-xs">{videoId ? '재생 중...' : '로딩 중...'}</p>
+                    </div>
                   </div>
                 </div>
               </div>
