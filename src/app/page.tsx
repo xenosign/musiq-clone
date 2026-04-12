@@ -59,14 +59,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-4xl font-bold mb-2 text-purple-400">🎵 Music Quiz</h1>
+      <h1 className="text-4xl font-bold mb-2" style={{ color: '#FF9900' }}><span style={{ color: '#FF9900' }}>♪</span> Tetz's MusicQ</h1>
       <p className="text-gray-400 mb-10 text-sm">음악을 듣고 제목을 맞춰보세요!</p>
 
       {view === 'home' && (
         <div className="flex flex-col gap-4 w-full max-w-xs">
           <button
             onClick={() => setView('create')}
-            className="bg-purple-600 hover:bg-purple-700 transition px-6 py-3 rounded-xl font-semibold text-lg"
+            className="bg-orange-600 hover:bg-orange-700 transition px-6 py-3 rounded-xl font-semibold text-lg"
           >
             방 만들기
           </button>
@@ -90,14 +90,14 @@ export default function Home() {
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="닉네임 입력"
-              className="w-full bg-gray-700 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-gray-700 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-[#FF9900]"
             />
           </div>
 
           <div>
             <label className="text-sm text-gray-400 mb-2 block">
               한국 가요 년대
-              <span className="ml-2 text-purple-400 text-xs">{selectedDecades.length}개 선택</span>
+              <span className="ml-2 text-orange-400 text-xs">{selectedDecades.length}개 선택</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               {DECADES.map((d) => (
@@ -106,7 +106,7 @@ export default function Home() {
                   onClick={() => toggleDecade(d)}
                   className={`py-2 rounded-lg text-sm font-medium transition ${
                     selectedDecades.includes(d)
-                      ? 'bg-purple-600 text-white ring-2 ring-purple-400'
+                      ? 'bg-orange-600 text-white ring-2 ring-[#FFB733]'
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
                 >
@@ -124,7 +124,7 @@ export default function Home() {
               max={12}
               value={maxPlayers}
               onChange={(e) => setMaxPlayers(Number(e.target.value))}
-              className="w-full accent-purple-500"
+              className="w-full accent-[#FF9900]"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
               <span>2명</span><span>12명</span>
@@ -140,7 +140,7 @@ export default function Home() {
               step={5}
               value={totalQuestions}
               onChange={(e) => setTotalQuestions(Number(e.target.value))}
-              className="w-full accent-purple-500"
+              className="w-full accent-[#FF9900]"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
               <span>5문제</span><span>30문제</span>
@@ -150,7 +150,7 @@ export default function Home() {
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
             onClick={handleCreate}
-            className="bg-purple-600 hover:bg-purple-700 transition px-6 py-2 rounded-xl font-semibold"
+            className="bg-orange-600 hover:bg-orange-700 transition px-6 py-2 rounded-xl font-semibold"
           >
             방 생성
           </button>
@@ -170,7 +170,7 @@ export default function Home() {
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="닉네임 입력"
-              className="w-full bg-gray-700 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-gray-700 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-[#FF9900]"
             />
           </div>
           {error && <p className="text-red-400 text-sm">{error}</p>}

@@ -1,6 +1,29 @@
-export type Decade = '1980' | '1990' | '2000' | '2005' | '2010' | '2015' | '2021' | '2022' | '2023' | '2024' | '2025';
+export type Decade =
+  | '1980'
+  | '1990'
+  | '2000'
+  | '2005'
+  | '2010'
+  | '2015'
+  | '2021'
+  | '2022'
+  | '2023'
+  | '2024'
+  | '2025';
 
-export const DECADES: Decade[] = ['1980', '1990', '2000', '2005', '2010', '2015', '2021', '2022', '2023', '2024', '2025'];
+export const DECADES: Decade[] = [
+  '1980',
+  '1990',
+  '2000',
+  '2005',
+  '2010',
+  '2015',
+  '2021',
+  '2022',
+  '2023',
+  '2024',
+  '2025',
+];
 
 export const DECADE_LABELS: Record<Decade, string> = {
   '1980': '1980년대',
@@ -13,7 +36,7 @@ export const DECADE_LABELS: Record<Decade, string> = {
   '2022': '2022년',
   '2023': '2023년',
   '2024': '2024년',
-  '2025': '2025년',
+  '2025': '2025년 ~ 최신곡',
 };
 
 export interface PlayerScore {
@@ -68,5 +91,15 @@ export type ServerMessage =
   | { type: 'error'; payload: { message: string } }
   | { type: 'game_started'; payload: { totalQuestions: number } }
   | { type: 'next_question'; payload: QuizQuestion }
-  | { type: 'answer_correct'; payload: { playerName: string; songTitle: string; scores: Record<string, number> } }
-  | { type: 'game_finished'; payload: { scores: Record<string, number>; winner: string } };
+  | {
+      type: 'answer_correct';
+      payload: {
+        playerName: string;
+        songTitle: string;
+        scores: Record<string, number>;
+      };
+    }
+  | {
+      type: 'game_finished';
+      payload: { scores: Record<string, number>; winner: string };
+    };

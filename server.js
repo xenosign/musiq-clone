@@ -224,6 +224,12 @@ app.prepare().then(() => {
             break;
           }
 
+          // 새 설정 반영 (다시하기 시 변경 가능)
+          console.log('[start_game] payload:', JSON.stringify(msg.payload));
+          if (msg.payload?.decades?.length) room.decades = msg.payload.decades;
+          if (msg.payload?.totalQuestions) room.totalQuestions = Number(msg.payload.totalQuestions);
+          console.log('[start_game] room.decades:', room.decades, 'room.totalQuestions:', room.totalQuestions);
+
           // Reset scores
           room.scores = {};
           room.players.forEach((p) => {
