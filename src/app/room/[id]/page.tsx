@@ -281,8 +281,6 @@ export default function RoomPage() {
                             </p>
                           </div>
                         </div>
-                        {/* 테스트용 정답 표시 */}
-                        {/* <p className="text-xs text-yellow-500 mt-2">[테스트] 정답: {question.title}</p> */}
                       </div>
                     )}
                     {lastCorrect && (
@@ -303,20 +301,22 @@ export default function RoomPage() {
                       </div>
                     )}
                   </div>
-                  {/* YouTube 플레이어 — 모든 참가자 재생 */}
-                  <div className="w-56 shrink-0">
+                  {/* YouTube 플레이어 — 데스크탑만 표시, 모바일은 오디오만 */}
+                  <div className="hidden md:block w-56 shrink-0">
                     {videoId ? (
                       <YoutubePlayer videoId={videoId} />
                     ) : (
                       <div className="h-full bg-gray-800 rounded-xl flex items-center justify-center">
                         <div className="text-center text-gray-500">
-                          <div className="text-2xl mb-1 animate-pulse text-orange-500">
-                            ♪
-                          </div>
+                          <div className="text-2xl mb-1 animate-pulse text-orange-500">♪</div>
                           <p className="text-xs">로딩 중...</p>
                         </div>
                       </div>
                     )}
+                  </div>
+                  {/* 모바일: YoutubePlayer 오디오만 (숨김) */}
+                  <div className="md:hidden">
+                    <YoutubePlayer videoId={videoId} />
                   </div>
                 </div>
               </div>
@@ -439,8 +439,8 @@ export default function RoomPage() {
 
           {/* 점수판 + 채팅 영역 */}
           <div className="flex flex-1 overflow-hidden">
-            {/* 점수판 사이드바 (왼쪽) */}
-            <div className="w-64 bg-gray-900 border-r border-gray-800 p-3 flex flex-col shrink-0 overflow-y-auto">
+            {/* 점수판 사이드바 (데스크탑만) */}
+            <div className="hidden md:flex flex-col w-64 bg-gray-900 border-r border-gray-800 p-3 shrink-0 overflow-y-auto">
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                 점수
               </h2>
@@ -449,11 +449,8 @@ export default function RoomPage() {
                   <li key={name} className="flex flex-col gap-0.5 bg-gray-800 rounded-lg px-2.5 py-2">
                     <div className="flex items-center gap-1">
                       <span className="text-base text-gray-500 shrink-0">{i + 1}.</span>
-                      <span
-                        className={`text-base font-medium truncate ${name === playerName ? 'text-orange-400' : ''}`}
-                      >
-                        {name}
-                        {name === room?.hostName && ' 👑'}
+                      <span className={`text-base font-medium truncate ${name === playerName ? 'text-orange-400' : ''}`}>
+                        {name}{name === room?.hostName && ' 👑'}
                       </span>
                     </div>
                     <span className="text-base text-yellow-400 font-bold pl-5">
@@ -466,6 +463,34 @@ export default function RoomPage() {
 
             {/* 채팅 영역 */}
             <div className="flex flex-col flex-1 overflow-hidden">
+
+              {/* 모바일: 참가자 가로 배치 */}
+              <div className="flex md:hidden gap-2 px-3 py-2 bg-gray-900 border-b border-gray-800 shrink-0 overflow-x-auto">
+                <span className="text-xs text-gray-500 shrink-0 self-center">참가자</span>
+                {(room?.players ?? []).map((name) => (
+                  <div key={name} className="flex items-center gap-1.5 bg-gray-800 rounded-full px-3 py-1 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+                    <span className={`text-sm whitespace-nowrap ${name === playerName ? 'text-orange-400 font-semibold' : ''}`}>
+                      {name}{name === room?.hostName && ' 👑'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* 모바일: 점수 가로 배치 (순위순) */}
+              <div className="flex md:hidden gap-2 px-3 py-2 bg-gray-900 border-b border-gray-800 shrink-0 overflow-x-auto">
+                <span className="text-xs text-gray-500 shrink-0 self-center">점수</span>
+                {scores.map((name, i) => (
+                  <div key={name} className="flex items-center gap-1.5 bg-gray-800 rounded-full px-3 py-1 shrink-0">
+                    <span className="text-xs text-gray-500">{i + 1}.</span>
+                    <span className={`text-sm whitespace-nowrap ${name === playerName ? 'text-orange-400 font-semibold' : ''}`}>
+                      {name}{name === room?.hostName && ' 👑'}
+                    </span>
+                    <span className="text-sm text-yellow-400 font-bold">{room?.scores?.[name] ?? 0}점</span>
+                  </div>
+                ))}
+              </div>
+
               {/* 채팅 메시지 */}
               <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
                 {messages.map((msg, i) => {
@@ -528,8 +553,8 @@ export default function RoomPage() {
               </div>
             </div>
 
-            {/* 참가자 사이드바 (오른쪽) */}
-            <aside className="w-64 bg-gray-900 border-l border-gray-800 p-4 flex flex-col shrink-0 overflow-y-auto">
+            {/* 참가자 사이드바 (데스크탑만) */}
+            <aside className="hidden md:flex flex-col w-64 bg-gray-900 border-l border-gray-800 p-4 shrink-0 overflow-y-auto">
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                 참가자 ({room?.players.length ?? 0}/{room?.maxPlayers ?? '?'})
               </h2>
