@@ -55,6 +55,7 @@ export interface Room {
   status: 'waiting' | 'playing' | 'finished';
   createdAt: number;
   hostOnlyMusic: boolean;
+  isPrivate: boolean;
 }
 
 export interface RoomSummary {
@@ -65,6 +66,7 @@ export interface RoomSummary {
   decades: Decade[];
   status: 'waiting' | 'playing' | 'finished';
   createdAt: number;
+  isPrivate: boolean;
 }
 
 export interface ChatMessage {
@@ -103,4 +105,5 @@ export type ServerMessage =
   | {
       type: 'game_finished';
       payload: { scores: Record<string, number>; winner: string };
-    };
+    }
+  | { type: 'room_closed'; payload: { message: string } };

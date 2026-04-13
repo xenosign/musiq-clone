@@ -42,6 +42,7 @@ function getRoomList() {
     decades: r.decades,
     status: r.status,
     createdAt: r.createdAt,
+    isPrivate: r.isPrivate,
   }));
 }
 
@@ -132,7 +133,7 @@ app.prepare().then(() => {
         }
 
         case 'create_room': {
-          const { maxPlayers, hostName, decades, totalQuestions, hostOnlyMusic } = msg.payload;
+          const { maxPlayers, hostName, decades, totalQuestions, hostOnlyMusic, isPrivate, password } = msg.payload;
           const roomId = randomUUID().slice(0, 8).toUpperCase();
           const room = {
             id: roomId,
@@ -148,6 +149,8 @@ app.prepare().then(() => {
             messages: [],
             game: null,
             hostOnlyMusic: Boolean(hostOnlyMusic),
+            isPrivate: Boolean(isPrivate),
+            password: isPrivate ? String(password || '') : '',
           };
           rooms.set(roomId, room);
           send(ws, { type: 'room_created', payload: { roomId, room } });
@@ -155,13 +158,21 @@ app.prepare().then(() => {
         }
 
         case 'join_room': {
-          const { roomId, playerName } = msg.payload;
+          const { roomId, playerName, password } = msg.payload;
           const room = rooms.get(roomId);
 
           if (!room) {
             send(ws, {
               type: 'error',
               payload: { message: '존재하지 않는 방입니다.' },
+            });
+            break;
+          }
+
+          if (room.isPrivate && room.password !== String(password || '')) {
+            send(ws, {
+              type: 'error',
+              payload: { message: '비밀번호가 틀렸습니다.' },
             });
             break;
           }
@@ -329,6 +340,16 @@ app.prepare().then(() => {
           break;
         }
 
+        case 'report_music_error': {
+          const { roomId: reportRoomId, playerName: reportPlayerName } = clientInfo;
+          if (!reportRoomId) break;
+          const reportRoom = rooms.get(reportRoomId);
+          if (!reportRoom) break;
+          const reportMessage = msg.payload?.message ?? '';
+          console.log(`[음악 오류 제보] 방: ${reportRoomId}, 제보자: ${reportPlayerName}, 문제 인덱스: ${reportRoom.game?.currentIndex ?? '-'}, 내용: ${reportMessage}`);
+          break;
+        }
+
         case 'skip_question': {
           const { roomId, playerName } = clientInfo;
           if (!roomId) break;
@@ -379,8 +400,15 @@ app.prepare().then(() => {
 
     const room = rooms.get(roomId);
     if (room) {
+      const isHost = room.hostName === playerName;
       room.players = room.players.filter((p) => p !== playerName);
-      if (room.players.length === 0) {
+
+      if (isHost) {
+        // 방장이 나가면 방 강제 종료
+        if (room.game?.timer) clearTimeout(room.game.timer);
+        broadcastToRoom(roomId, { type: 'room_closed', payload: { message: '방장이 방을 나갔습니다. 메인 화면으로 이동합니다.' } });
+        rooms.delete(roomId);
+      } else if (room.players.length === 0) {
         if (room.game?.timer) clearTimeout(room.game.timer);
         rooms.delete(roomId);
       } else {
