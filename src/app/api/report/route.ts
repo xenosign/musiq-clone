@@ -10,9 +10,6 @@ export async function POST(req: NextRequest) {
     const url = process.env.SUPABASE_URL?.trim();
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
-    console.log('[DEBUG] Key Length:', key?.length);
-    console.log('[DEBUG] Key Prefix:', key?.substring(0, 5));
-
     if (!url || !key) {
       console.error('[report] Supabase 환경변수 누락:', { url, hasKey: !!key });
       return NextResponse.json({ error: 'env missing' }, { status: 500 });
