@@ -290,7 +290,7 @@ export default function Home() {
             <h2 className="text-xl font-bold">방 참가하기</h2>
             <button
               onClick={() => send({ type: 'list_rooms' })}
-              className="text-gray-400 hover:text-[#FF9900] transition p-1 rounded-lg hover:bg-gray-700"
+              className="text-white bg-orange-600 hover:bg-orange-700 transition px-2 py-1 rounded-lg font-bold"
               title="새로고침"
             >
               ↺
