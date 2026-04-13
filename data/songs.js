@@ -1767,7 +1767,7 @@ const SONGS = {
       artist: '세븐',
       year: 2004,
       answer: ['열정'],
-      youtubeId: 'Jobtc6ih7UI',
+      youtubeId: 'gTq7iCkbg2w',
     },
     {
       title: '태양을 피하는 방법',
