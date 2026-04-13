@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'invalid' }, { status: 400 });
     }
 
-    const url = process.env.VITE_SUPABASE_URL?.trim();
-    const key = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY?.trim();
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+    const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY?.trim();
 
     if (!url || !key) {
       console.error('[report] Supabase 환경변수 누락:', { url, hasKey: !!key });
