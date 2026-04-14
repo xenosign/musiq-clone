@@ -1581,13 +1581,6 @@ const SONGS = {
       youtubeId: 'cYdhmgFoCJo',
     },
     {
-      title: '가거라',
-      artist: '왁스',
-      year: 2001,
-      answer: ['가거라'],
-      youtubeId: 'DupSqx0Cz0s',
-    },
-    {
       title: '아시나요',
       artist: '조성모',
       year: 2000,
@@ -1929,7 +1922,7 @@ const SONGS = {
       artist: '플라이 투 더 스카이',
       year: 2000,
       answer: ['foryou', '포유'],
-      youtubeId: 'xkFg48tvKg8',
+      youtubeId: 'KDdPLs3tEI0',
     },
     {
       title: 'Sea Of Love',
