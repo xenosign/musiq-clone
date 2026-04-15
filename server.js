@@ -39,6 +39,7 @@ function getRoomList() {
     hostName: r.hostName,
     maxPlayers: r.maxPlayers,
     playerCount: r.players.length,
+    players: r.players,
     decades: r.decades,
     status: r.status,
     createdAt: r.createdAt,
@@ -178,13 +179,11 @@ app.prepare().then(() => {
           }
           if (!room.scores) room.scores = {};
 
-          if (
-            room.players.includes(playerName) &&
-            clientInfo.roomId !== roomId
-          ) {
-            clientInfo.roomId = roomId;
-            clientInfo.playerName = playerName;
-            send(ws, { type: 'room_joined', payload: { roomId, room } });
+          if (room.players.includes(playerName)) {
+            send(ws, {
+              type: 'error',
+              payload: { message: '동일한 닉네임이 존재합니다.' },
+            });
             break;
           }
 

@@ -77,6 +77,8 @@ export default function Home() {
 
   const handleJoin = (roomId: string, password?: string) => {
     if (!playerName.trim()) return setError('닉네임을 입력해주세요.');
+    const room = rooms.find((r) => r.id === roomId);
+    if (room?.players.includes(playerName.trim())) return setError('동일한 닉네임이 존재합니다.');
     setError('');
     const url = `/room/${roomId}?name=${encodeURIComponent(playerName.trim())}${password ? `&password=${encodeURIComponent(password)}` : ''}`;
     router.push(url);

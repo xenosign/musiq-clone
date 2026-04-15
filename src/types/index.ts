@@ -63,6 +63,7 @@ export interface RoomSummary {
   hostName: string;
   maxPlayers: number;
   playerCount: number;
+  players: string[];
   decades: Decade[];
   status: 'waiting' | 'playing' | 'finished';
   createdAt: number;
