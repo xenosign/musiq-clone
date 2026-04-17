@@ -1904,13 +1904,6 @@ const SONGS = {
       youtubeId: 'MSS_h875p7g',
     },
     {
-      title: 'Tell Me Goodbye',
-      artist: '부활',
-      year: 2002,
-      answer: ['tellmegoodbye', '텔미굿바이'],
-      youtubeId: 'eN5mG_yMDiM',
-    },
-    {
       title: '점점',
       artist: '브라운 아이즈',
       year: 2002,
@@ -4830,7 +4823,7 @@ const SONGS = {
       artist: 'BTS',
       year: 2022,
       answer: ['foryouth', '포유스'],
-      youtubeId: 'qNBM7eL0ofQ',
+      youtubeId: 'PCupTKYKpmE',
     },
     {
       title: 'That That',
@@ -5558,13 +5551,6 @@ const SONGS = {
       youtubeId: 'lzm-7YfBJBU',
     },
     {
-      title: '내 이름 입술 위에',
-      artist: '비비 (BIBI)',
-      year: 2024,
-      answer: ['내이름입술위에'],
-      youtubeId: 'PRfbCM_lWYw',
-    },
-    {
       title: '고민중독',
       artist: 'QWER',
       year: 2024,
@@ -5661,13 +5647,6 @@ const SONGS = {
       year: 2024,
       answer: ['heaven', '헤븐'],
       youtubeId: 'jgWxe6bFSVw',
-    },
-    {
-      title: '꽃말',
-      artist: '이무진',
-      year: 2024,
-      answer: ['꽃말'],
-      youtubeId: 'GuGL-QK2gVU',
     },
     {
       title: '온기',
@@ -6020,13 +5999,6 @@ const SONGS = {
       year: 2026,
       answer: ['호프', 'hope'],
       youtubeId: 'e95-Gaj2iXM',
-    },
-    {
-      title: 'Together',
-      artist: '방탄소년단 (BTS)',
-      year: 2026,
-      answer: ['투게더', 'together'],
-      youtubeId: '0ZCyD42ntwI',
     },
     {
       title: 'Future',
