@@ -30,6 +30,7 @@ export default function RoomPage() {
   const [lastCorrect, setLastCorrect] = useState<{
     playerName: string;
     songTitle: string;
+    artist: string;
   } | null>(null);
   const [gameFinished, setGameFinished] = useState<{
     scores: Record<string, number>;
@@ -141,6 +142,7 @@ export default function RoomPage() {
         setLastCorrect({
           playerName: msg.payload.playerName,
           songTitle: msg.payload.songTitle,
+          artist: msg.payload.artist ?? '',
         });
         setRoom((prev) =>
           prev ? { ...prev, scores: msg.payload.scores } : prev,
@@ -393,11 +395,11 @@ export default function RoomPage() {
                       <p className='text-orange-400 font-bold text-xl'>
                         {lastCorrect?.playerName ?? ''}님이 맞추셨습니다!
                       </p>
-                      <p className='text-gray-300 text-base'>
-                        정답:{' '}
-                        <span className='text-white font-semibold'>
-                          "{lastCorrect?.songTitle ?? ''}"
-                        </span>
+                      <p className='text-white font-bold text-2xl mt-1'>
+                        {lastCorrect?.songTitle ?? ''}
+                      </p>
+                      <p className='text-gray-400 text-base'>
+                        {lastCorrect?.artist ?? ''}
                       </p>
                       <p className='text-gray-500 text-sm mt-1'>
                         다음 문제 준비 중...

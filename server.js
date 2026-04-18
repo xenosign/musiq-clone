@@ -316,6 +316,7 @@ app.prepare().then(() => {
                 payload: {
                   playerName,
                   songTitle: song.title,
+                  artist: song.artist,
                   scores: room.scores,
                 },
               });
