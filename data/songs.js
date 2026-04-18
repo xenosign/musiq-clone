@@ -1780,7 +1780,7 @@ const SONGS = {
       title: "It's Raining",
       artist: '비',
       year: 2004,
-      answer: ['itsraining', '잇츠레이닝'],
+      answer: ['itsraining', '잇츠레이닝', '이츠레이닝'],
       youtubeId: 'eCMhO5P8QpI',
     },
     {
