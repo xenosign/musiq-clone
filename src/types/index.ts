@@ -100,6 +100,7 @@ export type ServerMessage =
       payload: {
         playerName: string;
         songTitle: string;
+        artist?: string;
         scores: Record<string, number>;
       };
     }
