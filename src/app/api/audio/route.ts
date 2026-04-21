@@ -24,6 +24,7 @@ function getAudioUrlViaYtDlp(videoId: string): Promise<string | null> {
       '-f', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio',
       '--get-url',
       '--no-playlist',
+      '--js-runtimes', 'nodejs',   // Node.js로 n-파라미터 복호화
       `https://www.youtube.com/watch?v=${videoId}`,
     ]);
 
