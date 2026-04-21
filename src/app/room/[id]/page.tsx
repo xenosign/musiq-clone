@@ -27,7 +27,6 @@ export default function RoomPage() {
   const [input, setInput] = useState('');
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
-  const [shouldPlay, setShouldPlay] = useState(false);
   const [lastCorrect, setLastCorrect] = useState<{
     playerName: string;
     songTitle: string;
@@ -44,6 +43,7 @@ export default function RoomPage() {
   const [restartDecades, setRestartDecades] = useState<Decade[]>(['2000']);
   const [restartTotalQuestions, setRestartTotalQuestions] = useState(10);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const pendingVideoIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
@@ -95,20 +95,18 @@ export default function RoomPage() {
   useEffect(() => {
     if (countdown === null) return;
     if (countdown === 0) {
-      // "시작" 텍스트를 1초 보여준 뒤 재생
+      // AudioContext가 오디오 세션을 점령하지 않도록 suspend
       if (audioCtxRef.current) {
         audioCtxRef.current.suspend().catch(() => {});
       }
-      setShouldPlay(true); // 시작! 표시와 동시에 재생
-      const timer = setTimeout(() => {
-        setCountdown(null);
-      }, 1000);
-      return () => clearTimeout(timer);
+      setVideoId(pendingVideoIdRef.current);
+      setCountdown(null);
+      return;
     }
     playBeep(countdown);
     const timer = setTimeout(
       () => setCountdown((c) => (c !== null ? c - 1 : null)),
-      1200,
+      1000,
     );
     return () => clearTimeout(timer);
   }, [countdown]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -134,12 +132,11 @@ export default function RoomPage() {
         setLastCorrect(null);
         setQuestion(null);
         setVideoId(null);
-        setShouldPlay(false);
       } else if (msg.type === 'next_question') {
         setQuestion(msg.payload);
         setLastCorrect(null);
-        setShouldPlay(false);
-        setVideoId(msg.payload.videoId); // 카운트다운 시작과 동시에 프리로드 시작
+        setVideoId(null);
+        pendingVideoIdRef.current = msg.payload.videoId;
         setCountdown(3);
       } else if (msg.type === 'answer_correct') {
         setLastCorrect({
@@ -154,7 +151,6 @@ export default function RoomPage() {
         setGameFinished(msg.payload);
         setQuestion(null);
         setVideoId(null);
-        setShouldPlay(false);
       } else if (msg.type === 'room_closed') {
         alert(msg.payload.message);
         router.push('/');
@@ -222,23 +218,20 @@ export default function RoomPage() {
   return (
     <div className='h-screen bg-gray-950 text-white flex flex-col overflow-hidden'>
       {/* YoutubePlayer — hostOnlyMusic이면 호스트만, 아니면 전체 재생 */}
-      {(!room?.hostOnlyMusic || isHost) && (
-        <YoutubePlayer videoId={videoId} shouldPlay={shouldPlay} />
-      )}
+      {(!room?.hostOnlyMusic || isHost) && <YoutubePlayer videoId={videoId} />}
       {/* 카운트다운 오버레이 */}
-      {countdown !== null && countdown >= 0 && (
+      {countdown !== null && countdown > 0 && (
         <div className='fixed inset-0 flex items-center justify-center z-50 pointer-events-none bg-black/40'>
           <div
             key={countdown}
-            className='font-black text-white select-none'
+            className='text-[14rem] font-black text-white select-none'
             style={{
-              fontSize: countdown === 0 ? '10rem' : '14rem',
               textShadow:
                 '0 0 60px rgba(168,85,247,1), 0 0 120px rgba(168,85,247,0.6)',
               animation: 'countdown-pop 0.9s ease-out forwards',
             }}
           >
-            {countdown === 0 ? '시작!' : countdown}
+            {countdown}
           </div>
         </div>
       )}
@@ -451,7 +444,7 @@ export default function RoomPage() {
                         ♪
                       </div>
                       <p className='text-xs'>
-                        {shouldPlay ? '재생 중...' : videoId ? '로딩 중...' : '대기 중...'}
+                        {videoId ? '재생 중...' : '로딩 중...'}
                       </p>
                     </div>
                   </div>
