@@ -1571,7 +1571,7 @@ const SONGS = {
       artist: '안재욱',
       year: 2003,
       answer: ['친구'],
-      youtubeId: 'd1VPGHgG_88',
+      youtubeId: 'LYbICWnw8d4',
     },
     {
       title: '사진을 보다가',
@@ -1958,13 +1958,6 @@ const SONGS = {
       year: 2004,
       answer: ['사랑했나봐'],
       youtubeId: 'MDNzHG4DDhE',
-    },
-    {
-      title: '먼지인형',
-      artist: '윤도현',
-      year: 2001,
-      answer: ['먼지인형'],
-      youtubeId: 'iysSr-B-UsQ',
     },
     {
       title: '미인',
