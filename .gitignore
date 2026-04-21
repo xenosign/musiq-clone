@@ -20,9 +20,6 @@
 # production
 /build
 
-# yt-dlp binary (postinstall로 자동 설치)
-/bin
-
 # misc
 .DS_Store
 *.pem

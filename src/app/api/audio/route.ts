@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'child_process';
-import { existsSync } from 'fs';
-import path from 'path';
-
-// 로컬 bin/yt-dlp 우선, 없으면 시스템 PATH에서 탐색
-const YT_DLP = existsSync(path.join(process.cwd(), 'bin', 'yt-dlp'))
-  ? path.join(process.cwd(), 'bin', 'yt-dlp')
-  : 'yt-dlp';
 
 // yt-dlp subprocess로 YouTube 오디오 스트림 URL을 추출합니다.
 // HTML5 <video>/<audio> 엘리먼트를 사용하지 않으므로 OS SMTC에 곡 정보가 노출되지 않습니다.
@@ -20,7 +13,7 @@ function getAudioUrlViaYtDlp(videoId: string): Promise<string | null> {
     let stdout = '';
     let stderr = '';
 
-    const proc = spawn(YT_DLP, [
+    const proc = spawn('yt-dlp', [
       '-f', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio',
       '--get-url',
       '--no-playlist',
