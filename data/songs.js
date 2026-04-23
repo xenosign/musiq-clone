@@ -813,7 +813,7 @@ const SONGS = {
       artist: '전람회',
       year: 1996,
       answer: ['취중진담'],
-      youtubeId: 'TQUUlIUOBzI',
+      youtubeId: '2gBMIWt6rHo',
     },
     {
       title: '기억의 습작',
