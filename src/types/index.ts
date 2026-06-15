@@ -9,7 +9,8 @@ export type Decade =
   | '2022'
   | '2023'
   | '2024'
-  | '2025';
+  | '2025'
+  | 'pop';
 
 export const DECADES: Decade[] = [
   '1980',
@@ -23,6 +24,7 @@ export const DECADES: Decade[] = [
   '2023',
   '2024',
   '2025',
+  'pop',
 ];
 
 export const DECADE_LABELS: Record<Decade, string> = {
@@ -37,6 +39,7 @@ export const DECADE_LABELS: Record<Decade, string> = {
   '2023': '2023년',
   '2024': '2024년',
   '2025': '2025년 ~ 최신곡',
+  pop: '팝송',
 };
 
 export interface PlayerScore {
