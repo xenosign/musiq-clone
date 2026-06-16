@@ -6020,7 +6020,7 @@ const SONGS = {
       title: 'Shape of You',
       artist: 'Ed Sheeran',
       year: 2017,
-      answer: ['쉐이프오브유', 'shapeofyou'],
+      answer: ['쉐이프오브유', '쉐입오브유', 'shapeofyou'],
       youtubeId: 'liTfD88dbCo',
     },
     {
@@ -6372,6 +6372,34 @@ const SONGS = {
       year: 2021,
       answer: ['피치스', 'peaches'],
       youtubeId: 'kGcoKuK08-c',
+    },
+    {
+      title: '2002',
+      artist: 'Anne-Marie',
+      year: 2018,
+      answer: ['2002'],
+      youtubeId: 'ee2mcqcGL_c',
+    },
+    {
+      title: 'Closer (Lyric) ft. Halsey',
+      artist: 'The Chainsmokers',
+      year: 2017,
+      answer: ['클로저', 'closer'],
+      youtubeId: 'PT2_F-1esPk',
+    },
+    {
+      title: ' Macarena',
+      artist: 'Los Del Rio',
+      year: 1993,
+      answer: ['마카레나', 'macarena'],
+      youtubeId: '2zvd1JQ0EKY',
+    },
+    {
+      title: 'Not Like Us',
+      artist: 'Kendrick Lamar',
+      year: 2024,
+      answer: ['낫라잌어스', '낫라익어스', 'notlikeus'],
+      youtubeId: 'T6eK-2OQtew',
     },
   ],
 };
