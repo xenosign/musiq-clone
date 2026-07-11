@@ -1110,10 +1110,10 @@ const SONGS = {
       youtubeId: '',
     },
     {
-      title: '전사들의 후예',
+      title: '전사의 후예',
       artist: 'H.O.T',
       year: 1996,
-      answer: ['전사들의후예'],
+      answer: ['전사의후예'],
       youtubeId: '',
     },
     {
